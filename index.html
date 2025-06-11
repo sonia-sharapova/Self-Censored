@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(ง•̀o•́)ง </title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+</head>
+<body>
+<div class="container">
+    <!-- Keyword Filtering Section Under Header -->
+    <section class="keyword-section">
+        <!-- Smaller Header at Top -->
+        <header class="header">
+            <h1>
+                <span style="color: #ced6e0">%*-- #?%*@&!@#$%--?#$%!@#$%!$@#$%!#$%!!@--#$%!#*@&!@&!@#$%#@--!#*@&#$%!!@!@*#$%!#*@#&!@@#$%!@-@#$%!--$%!@%!#&$%!@#$%!$# </span>
+                <br>
+                Self-Censored
+            </h1>
+            <p>CONFIRM YOUR BIASES  ৻( •̀ ᗜ •́ ৻) Credible and consensual – because sometimes, [willful] ignorance is bliss</p>
+
+
+        </header>
+        <div class="action-buttons" style="justify-content: left; display: inline; margin-left: 5px">
+            <button class="btn btn-tertiary" onclick="exportSettings()">+ Export Settings + </button>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importSettings(event)">
+            <button class="btn btn-tertiary" onclick="document.getElementById('importFile').click()">- Import Settings -</button>
+            <button class="btn btn-primary" onclick="loadNews()"> ↻  Refresh News </button>
+            <button class="btn btn-secondary" onclick="clearAllFilters()">~ Clear All Filters ~</button>
+        </div>
+
+        <br>
+
+        <div class="keyword-input" style="display: unset">
+            <button class="btn" style="border-radius: 5px; border-style: outset;" onclick="addKeyword()">turn a blind eye <br> (/ω＼)</button>
+
+            <input
+                    type="text"
+                    id="keywordInput"
+                    placeholder="🔍<---- BLOCK WORDS FROM YOUR NEWS ... xXx (e.g., Elon, AI, war)"
+                    autocomplete="off"
+            >
+        </div>
+        <div id="keywordsList" class="keywords-list"></div>
+
+        <!-- Main Content Layout -->
+    <div class="main-layout">
+        <!-- Sources Sidebar (Right Side - Static) -->
+        <aside class="sources-sidebar">
+            <!-- Available Sources Wheel -->
+            <div class="sources-wheel active-wheel">
+                <div class="wheel-header active-header">
+                    AVAILABLE NEWS SOURCES<br> ٩(ˊᗜˋ*)و ♡
+                </div>
+                <div id="activeSources"></div>
+            </div>
+
+            <!-- Limited Sources Wheel -->
+            <div class="sources-wheel limited-wheel">
+                <div class="wheel-header limited-header">
+                    LIMITED SOURCES <br> (,,>﹏<,,)
+                </div>
+                <div id="limitedSources"></div>
+            </div>
+        </aside>
+        <!-- News Section (Center-Left) -->
+        <section class="news-section">
+
+
+            <!-- Status Section -->
+            <div id="status" class="status" style="display: none;"></div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading news from... "reliable" sources...</p>
+            </div>
+
+            <!-- News Grid -->
+            <main id="newsContainer" class="news-grid"></main>
+        </section>
+
+
+    </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Self-Censored. If you can't see it, it's not real!</p>
+    </footer>
+</div>
+
+<!-- Error Modal -->
+<div id="errorModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeErrorModal()">&times;</span>
+        <h3>⚠️ Error</h3>
+        <p id="errorMessage"></p>
+        <button class="btn" onclick="closeErrorModal()">OK</button>
+    </div>
+</div>
+
+<!-- Settings Modal
+<div id="settingsModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeSettingsModal()">&times;</span>
+        <h3> ☆ Settings</h3>
+        <div class="settings-content">
+            <div class="setting-item">
+                <label for="articlesPerPage">Articles per page:</label>
+                <select id="articlesPerPage" onchange="updateSettings()">
+                    <option value="20">20</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <label for="darkMode">
+                    <input type="checkbox" id="darkMode" onchange="toggleDarkMode()">
+                    Dark Mode
+                </label>
+            </div>
+            <div class="setting-item">
+                <label for="autoRefresh">
+                    <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
+                    Auto-refresh every 30 minutes
+                </label>
+            </div>
+            <div class="setting-item">
+                <label for="hideInactiveSources">
+                    <input type="checkbox" id="hideInactiveSources" onchange="toggleHideInactiveSources()" checked>
+                    Hide sources with limited API support
+                </label>
+            </div>
+            <div class="setting-item">
+                <label for="shuffleArticles">
+                    <input type="checkbox" id="shuffleArticles" onchange="toggleShuffleArticles()">
+                    Mix articles randomly from different sources
+                </label>
+            </div>
+        </div>
+        <button class="btn" onclick="closeSettingsModal()">Close</button>
+    </div>
+</div>
+
+<button class="settings-btn" onclick="openSettingsModal()" title="Settings">⚙️</button>
+-->
+<script src="script.js"></script>
+
+</body>
+</html>
