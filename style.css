@@ -520,7 +520,7 @@ body {
 .btn-secondary, .btn-primary {
     padding: var(--spacing-md) 30px;
     margin-top: 40px;
-    background: rgba(141, 159, 189, 0.29);
+    background: rgba(153, 189, 141, 0.29);
     border: 1px solid rgba(141, 159, 189, 0.29);
     font-size: 1rem;
     font-weight: 300;
@@ -534,7 +534,7 @@ body {
  .btn-tertiary {
     padding: var(--spacing-md) 30px;
     margin-top: 40px;
-    background: rgba(141, 159, 189, 0.29);
+     background: rgba(73, 77, 84, 0.29);
     border: 1px solid rgba(141, 159, 189, 0.29);
     font-size: 1rem;
     font-weight: 300;
