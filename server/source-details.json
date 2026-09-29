@@ -1,0 +1,758 @@
+{
+  "bbc": {
+    "aliases": [
+      "BBC",
+      "British Broadcasting Corporation"
+    ],
+    "owner": "British Broadcasting Corporation",
+    "ownerType": "Public broadcaster, funded by the UK licence fee",
+    "country": "United Kingdom",
+    "homepage": "https://www.bbc.com/news",
+    "mbfc": "https://mediabiasfactcheck.com/bbc/",
+    "note": ""
+  },
+  "npr": {
+    "aliases": [
+      "National Public Radio"
+    ],
+    "owner": "National Public Radio, Inc.",
+    "ownerType": "Nonprofit, funded largely by member stations and donors",
+    "country": "United States",
+    "homepage": "https://www.npr.org/",
+    "mbfc": "https://mediabiasfactcheck.com/npr/",
+    "note": ""
+  },
+  "pbs": {
+    "aliases": [
+      "PBS News Hour",
+      "PBS NewsHour"
+    ],
+    "owner": "WETA Washington, D.C. (for PBS)",
+    "ownerType": "Public broadcaster",
+    "country": "United States",
+    "homepage": "https://www.pbs.org/newshour/",
+    "mbfc": "https://mediabiasfactcheck.com/pbs-news-hour/",
+    "note": ""
+  },
+  "propublica": {
+    "aliases": [],
+    "owner": "Pro Publica, Inc.",
+    "ownerType": "Nonprofit investigative newsroom",
+    "country": "United States",
+    "homepage": "https://www.propublica.org/",
+    "mbfc": "https://mediabiasfactcheck.com/propublica/",
+    "note": ""
+  },
+  "cbs": {
+    "aliases": [
+      "CBS"
+    ],
+    "owner": "Paramount Skydance",
+    "ownerType": "Corporate",
+    "country": "United States",
+    "homepage": "https://www.cbsnews.com/",
+    "mbfc": "https://mediabiasfactcheck.com/cbs-news/",
+    "note": "MBFC rates its credibility Medium (Mostly Factual)."
+  },
+  "abc": {
+    "aliases": [
+      "ABC",
+      "ABC News US"
+    ],
+    "owner": "The Walt Disney Company",
+    "ownerType": "Corporate",
+    "country": "United States",
+    "homepage": "https://abcnews.go.com/",
+    "mbfc": "https://mediabiasfactcheck.com/abc-news/",
+    "note": ""
+  },
+  "nbc": {
+    "aliases": [
+      "NBC"
+    ],
+    "owner": "NBCUniversal (Comcast)",
+    "ownerType": "Corporate",
+    "country": "United States",
+    "homepage": "https://www.nbcnews.com/",
+    "mbfc": "https://mediabiasfactcheck.com/nbc-news/",
+    "note": ""
+  },
+  "politico": {
+    "aliases": [
+      "POLITICO"
+    ],
+    "owner": "Axel Springer SE",
+    "ownerType": "Corporate",
+    "country": "United States",
+    "homepage": "https://www.politico.com/",
+    "mbfc": "https://mediabiasfactcheck.com/politico/",
+    "note": ""
+  },
+  "thehill": {
+    "aliases": [],
+    "owner": "Nexstar Media Group",
+    "ownerType": "Corporate",
+    "country": "United States",
+    "homepage": "https://thehill.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-hill/",
+    "note": ""
+  },
+  "axios": {
+    "aliases": [],
+    "owner": "Cox Enterprises",
+    "ownerType": "Private company",
+    "country": "United States",
+    "homepage": "https://www.axios.com/",
+    "mbfc": "https://mediabiasfactcheck.com/axios/",
+    "note": ""
+  },
+  "semafor": {
+    "aliases": [],
+    "owner": "Semafor, Inc.",
+    "ownerType": "Founder-owned startup",
+    "country": "United States",
+    "homepage": "https://www.semafor.com/",
+    "mbfc": "https://mediabiasfactcheck.com/semafor/",
+    "note": ""
+  },
+  "time": {
+    "aliases": [
+      "TIME",
+      "Time magazine"
+    ],
+    "owner": "Marc and Lynne Benioff",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://time.com/",
+    "mbfc": "https://mediabiasfactcheck.com/time/",
+    "note": ""
+  },
+  "latimes": {
+    "aliases": [
+      "LA Times",
+      "L.A. Times"
+    ],
+    "owner": "Patrick Soon-Shiong (Nant Capital)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://www.latimes.com/",
+    "mbfc": "https://mediabiasfactcheck.com/la-times/",
+    "note": ""
+  },
+  "wapo": {
+    "aliases": [
+      "WaPo",
+      "The Post"
+    ],
+    "owner": "Jeff Bezos (Nash Holdings)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://www.washingtonpost.com/",
+    "mbfc": "https://mediabiasfactcheck.com/washington-post/",
+    "note": "Its RSS feed currently returns nothing."
+  },
+  "nyt": {
+    "aliases": [
+      "NYT",
+      "The Times",
+      "The Gray Lady"
+    ],
+    "owner": "The New York Times Company",
+    "ownerType": "Publicly traded, controlled by the Ochs-Sulzberger family",
+    "country": "United States",
+    "homepage": "https://www.nytimes.com/",
+    "mbfc": "https://mediabiasfactcheck.com/new-york-times/",
+    "note": ""
+  },
+  "huffpost": {
+    "aliases": [
+      "Huffington Post",
+      "HuffPo"
+    ],
+    "owner": "BuzzFeed, Inc.",
+    "ownerType": "Publicly traded",
+    "country": "United States",
+    "homepage": "https://www.huffpost.com/",
+    "mbfc": "https://mediabiasfactcheck.com/huffington-post/",
+    "note": "Fetched through Google News search: its own feed went empty."
+  },
+  "washexaminer": {
+    "aliases": [
+      "Examiner"
+    ],
+    "owner": "Clarity Media Group (Philip Anschutz)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://www.washingtonexaminer.com/",
+    "mbfc": "https://mediabiasfactcheck.com/washington-examiner/",
+    "note": ""
+  },
+  "guardian": {
+    "aliases": [
+      "The Guardian US",
+      "Guardian"
+    ],
+    "owner": "Guardian Media Group (Scott Trust)",
+    "ownerType": "Trust-owned, no shareholders",
+    "country": "United Kingdom",
+    "homepage": "https://www.theguardian.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-guardian/",
+    "note": "Needs a free Guardian API key on the server; without one it is listed as having no free feed."
+  },
+  "reuters": {
+    "aliases": [
+      "Thomson Reuters"
+    ],
+    "owner": "Thomson Reuters",
+    "ownerType": "Publicly traded",
+    "country": "United Kingdom / Canada",
+    "homepage": "https://www.reuters.com/",
+    "mbfc": "https://mediabiasfactcheck.com/reuters/",
+    "note": "No free RSS, so it comes through Google News search."
+  },
+  "ap": {
+    "aliases": [
+      "AP",
+      "The AP",
+      "AP News"
+    ],
+    "owner": "The Associated Press",
+    "ownerType": "Nonprofit news cooperative",
+    "country": "United States",
+    "homepage": "https://apnews.com/",
+    "mbfc": "https://mediabiasfactcheck.com/associated-press/",
+    "note": "No free RSS, so it comes through Google News search."
+  },
+  "cnn": {
+    "aliases": [
+      "Cable News Network"
+    ],
+    "owner": "Warner Bros. Discovery",
+    "ownerType": "Corporate",
+    "country": "United States",
+    "homepage": "https://www.cnn.com/",
+    "mbfc": "https://mediabiasfactcheck.com/cnn/",
+    "note": "Its RSS stopped updating in April 2023, so it comes through Google News search."
+  },
+  "wsj": {
+    "aliases": [
+      "The Journal",
+      "WSJ"
+    ],
+    "owner": "Dow Jones & Company (News Corp)",
+    "ownerType": "Corporate, controlled by the Murdoch family",
+    "country": "United States",
+    "homepage": "https://www.wsj.com/",
+    "mbfc": "https://mediabiasfactcheck.com/wall-street-journal/",
+    "note": "Its RSS stopped in January 2025, so it comes through Google News search."
+  },
+  "fox": {
+    "aliases": [
+      "Fox",
+      "FNC"
+    ],
+    "owner": "Fox Corporation",
+    "ownerType": "Corporate, controlled by the Murdoch family",
+    "country": "United States",
+    "homepage": "https://www.foxnews.com/",
+    "mbfc": "https://mediabiasfactcheck.com/fox-news/",
+    "note": "MBFC rates it Low credibility, so the app marks it \"mixed credibility\"."
+  },
+  "nypost": {
+    "aliases": [
+      "NY Post",
+      "The Post"
+    ],
+    "owner": "News Corp",
+    "ownerType": "Corporate, controlled by the Murdoch family",
+    "country": "United States",
+    "homepage": "https://nypost.com/",
+    "mbfc": "https://mediabiasfactcheck.com/new-york-post/",
+    "note": "MBFC rates its factual reporting Mixed, so the app marks it \"mixed credibility\"."
+  },
+  "dw": {
+    "aliases": [
+      "Deutsche Welle",
+      "DW News"
+    ],
+    "owner": "Deutsche Welle",
+    "ownerType": "Public international broadcaster, funded by the German government",
+    "country": "Germany",
+    "homepage": "https://www.dw.com/",
+    "mbfc": "https://mediabiasfactcheck.com/dw-news/",
+    "note": ""
+  },
+  "france24": {
+    "aliases": [
+      "France24"
+    ],
+    "owner": "France Médias Monde",
+    "ownerType": "Public international broadcaster",
+    "country": "France",
+    "homepage": "https://www.france24.com/en/",
+    "mbfc": "https://mediabiasfactcheck.com/france24/",
+    "note": ""
+  },
+  "abcau": {
+    "aliases": [
+      "ABC Australia",
+      "Australian Broadcasting Corporation"
+    ],
+    "owner": "Australian Broadcasting Corporation",
+    "ownerType": "Public broadcaster",
+    "country": "Australia",
+    "homepage": "https://www.abc.net.au/news",
+    "mbfc": "https://mediabiasfactcheck.com/abc-news-australia/",
+    "note": ""
+  },
+  "sky": {
+    "aliases": [
+      "Sky News UK"
+    ],
+    "owner": "Sky Group (Comcast)",
+    "ownerType": "Corporate",
+    "country": "United Kingdom",
+    "homepage": "https://news.sky.com/",
+    "mbfc": "https://mediabiasfactcheck.com/sky-news/",
+    "note": ""
+  },
+  "euronews": {
+    "aliases": [],
+    "owner": "Alpac Capital (majority owner)",
+    "ownerType": "Privately owned",
+    "country": "Europe",
+    "homepage": "https://www.euronews.com/",
+    "mbfc": "https://mediabiasfactcheck.com/euronews/",
+    "note": ""
+  },
+  "globeandmail": {
+    "aliases": [
+      "Globe and Mail",
+      "The Globe"
+    ],
+    "owner": "The Woodbridge Company (Thomson family)",
+    "ownerType": "Privately owned",
+    "country": "Canada",
+    "homepage": "https://www.theglobeandmail.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-globe-and-mail/",
+    "note": ""
+  },
+  "japantimes": {
+    "aliases": [
+      "Japan Times"
+    ],
+    "owner": "News2u Holdings",
+    "ownerType": "Privately owned",
+    "country": "Japan",
+    "homepage": "https://www.japantimes.co.jp/",
+    "mbfc": "https://mediabiasfactcheck.com/japan-times/",
+    "note": ""
+  },
+  "thehindu": {
+    "aliases": [
+      "Hindu"
+    ],
+    "owner": "THG Publishing (Kasturi & Sons)",
+    "ownerType": "Family-owned",
+    "country": "India",
+    "homepage": "https://www.thehindu.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-hindu/",
+    "note": ""
+  },
+  "aljazeera": {
+    "aliases": [
+      "AJE",
+      "Al Jazeera English"
+    ],
+    "owner": "Al Jazeera Media Network",
+    "ownerType": "State-funded by the government of Qatar",
+    "country": "Qatar",
+    "homepage": "https://www.aljazeera.com/",
+    "mbfc": "https://mediabiasfactcheck.com/al-jazeera/",
+    "note": "MBFC rates its factual reporting Mixed, so the app marks it \"mixed credibility\"."
+  },
+  "scmp": {
+    "aliases": [
+      "SCMP"
+    ],
+    "owner": "Alibaba Group",
+    "ownerType": "Corporate",
+    "country": "Hong Kong",
+    "homepage": "https://www.scmp.com/",
+    "mbfc": "https://mediabiasfactcheck.com/south-china-morning-post/",
+    "note": "MBFC rates its factual reporting Mixed, so the app marks it \"mixed credibility\"."
+  },
+  "economist": {
+    "aliases": [
+      "Economist"
+    ],
+    "owner": "The Economist Group",
+    "ownerType": "Private, with a trust protecting editorial independence",
+    "country": "United Kingdom",
+    "homepage": "https://www.economist.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-economist/",
+    "note": "Free headline feed; articles are paywalled."
+  },
+  "ft": {
+    "aliases": [
+      "FT"
+    ],
+    "owner": "Nikkei Inc.",
+    "ownerType": "Corporate",
+    "country": "United Kingdom",
+    "homepage": "https://www.ft.com/",
+    "mbfc": "https://mediabiasfactcheck.com/financial-times/",
+    "note": "Free headline feed; articles are paywalled."
+  },
+  "bloomberg": {
+    "aliases": [],
+    "owner": "Bloomberg L.P. (Michael Bloomberg)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://www.bloomberg.com/",
+    "mbfc": "https://mediabiasfactcheck.com/bloomberg/",
+    "note": "Free headline feed; articles are paywalled."
+  },
+  "atlantic": {
+    "aliases": [
+      "Atlantic"
+    ],
+    "owner": "Emerson Collective (Laurene Powell Jobs)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://www.theatlantic.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-atlantic/",
+    "note": ""
+  },
+  "vox": {
+    "aliases": [],
+    "owner": "Vox Media",
+    "ownerType": "Private company",
+    "country": "United States",
+    "homepage": "https://www.vox.com/",
+    "mbfc": "https://mediabiasfactcheck.com/vox/",
+    "note": ""
+  },
+  "motherjones": {
+    "aliases": [
+      "MoJo"
+    ],
+    "owner": "Foundation for National Progress",
+    "ownerType": "Nonprofit",
+    "country": "United States",
+    "homepage": "https://www.motherjones.com/",
+    "mbfc": "https://mediabiasfactcheck.com/mother-jones/",
+    "note": ""
+  },
+  "nationalreview": {
+    "aliases": [
+      "NR",
+      "NRO"
+    ],
+    "owner": "National Review, Inc.",
+    "ownerType": "Private, with the nonprofit National Review Institute",
+    "country": "United States",
+    "homepage": "https://www.nationalreview.com/",
+    "mbfc": "https://mediabiasfactcheck.com/national-review/",
+    "note": ""
+  },
+  "dispatch": {
+    "aliases": [
+      "Dispatch"
+    ],
+    "owner": "The Dispatch Media, Inc.",
+    "ownerType": "Founder-owned",
+    "country": "United States",
+    "homepage": "https://thedispatch.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-dispatch/",
+    "note": ""
+  },
+  "conversation": {
+    "aliases": [],
+    "owner": "The Conversation",
+    "ownerType": "Nonprofit, written by academics",
+    "country": "International",
+    "homepage": "https://theconversation.com/us",
+    "mbfc": "https://mediabiasfactcheck.com/the-conversation/",
+    "note": ""
+  },
+  "sciencedaily": {
+    "aliases": [],
+    "owner": "ScienceDaily",
+    "ownerType": "Independent",
+    "country": "United States",
+    "homepage": "https://www.sciencedaily.com/",
+    "mbfc": "https://mediabiasfactcheck.com/science-daily/",
+    "note": "Mostly republished university press releases."
+  },
+  "nature": {
+    "aliases": [
+      "Nature journal"
+    ],
+    "owner": "Springer Nature",
+    "ownerType": "Publicly traded",
+    "country": "United Kingdom",
+    "homepage": "https://www.nature.com/",
+    "mbfc": "https://mediabiasfactcheck.com/nature/",
+    "note": ""
+  },
+  "spaceflight": {
+    "aliases": [
+      "SNAPI",
+      "Spaceflight News API"
+    ],
+    "owner": "The Space Devs",
+    "ownerType": "Open community project",
+    "country": "International",
+    "homepage": "https://spaceflightnewsapi.net/",
+    "mbfc": null,
+    "note": "An aggregator API of spaceflight news from other outlets; MBFC does not rate it."
+  },
+  "arstechnica": {
+    "aliases": [
+      "Ars"
+    ],
+    "owner": "Condé Nast (Advance Publications)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://arstechnica.com/",
+    "mbfc": "https://mediabiasfactcheck.com/ars-technica/",
+    "note": ""
+  },
+  "wired": {
+    "aliases": [
+      "WIRED"
+    ],
+    "owner": "Condé Nast (Advance Publications)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://www.wired.com/",
+    "mbfc": "https://mediabiasfactcheck.com/wired-magazine/",
+    "note": ""
+  },
+  "verge": {
+    "aliases": [
+      "Verge"
+    ],
+    "owner": "Vox Media",
+    "ownerType": "Private company",
+    "country": "United States",
+    "homepage": "https://www.theverge.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-verge/",
+    "note": ""
+  },
+  "techcrunch": {
+    "aliases": [
+      "TC"
+    ],
+    "owner": "Yahoo (Apollo Global Management)",
+    "ownerType": "Private equity owned",
+    "country": "United States",
+    "homepage": "https://techcrunch.com/",
+    "mbfc": "https://mediabiasfactcheck.com/techcrunch/",
+    "note": ""
+  },
+  "engadget": {
+    "aliases": [],
+    "owner": "Yahoo (Apollo Global Management)",
+    "ownerType": "Private equity owned",
+    "country": "United States",
+    "homepage": "https://www.engadget.com/",
+    "mbfc": "https://mediabiasfactcheck.com/engadget/",
+    "note": ""
+  },
+  "cnet": {
+    "aliases": [],
+    "owner": "Ziff Davis",
+    "ownerType": "Publicly traded",
+    "country": "United States",
+    "homepage": "https://www.cnet.com/",
+    "mbfc": "https://mediabiasfactcheck.com/cnet/",
+    "note": ""
+  },
+  "gizmodo": {
+    "aliases": [
+      "Giz"
+    ],
+    "owner": "Keleops",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://gizmodo.com/",
+    "mbfc": "https://mediabiasfactcheck.com/gizmodo/",
+    "note": ""
+  },
+  "zdnet": {
+    "aliases": [
+      "ZDNET"
+    ],
+    "owner": "Ziff Davis",
+    "ownerType": "Publicly traded",
+    "country": "United States",
+    "homepage": "https://www.zdnet.com/",
+    "mbfc": "https://mediabiasfactcheck.com/zdnet/",
+    "note": ""
+  },
+  "mashable": {
+    "aliases": [],
+    "owner": "Ziff Davis",
+    "ownerType": "Publicly traded",
+    "country": "United States",
+    "homepage": "https://mashable.com/",
+    "mbfc": "https://mediabiasfactcheck.com/mashable/",
+    "note": ""
+  },
+  "register": {
+    "aliases": [
+      "El Reg",
+      "The Reg"
+    ],
+    "owner": "Situation Publishing",
+    "ownerType": "Privately owned",
+    "country": "United Kingdom",
+    "homepage": "https://www.theregister.com/",
+    "mbfc": "https://mediabiasfactcheck.com/the-register/",
+    "note": ""
+  },
+  "404media": {
+    "aliases": [
+      "404"
+    ],
+    "owner": "404 Media (worker-owned)",
+    "ownerType": "Owned by its four co-founders",
+    "country": "United States",
+    "homepage": "https://www.404media.co/",
+    "mbfc": "https://mediabiasfactcheck.com/404-media/",
+    "note": ""
+  },
+  "bleepingcomputer": {
+    "aliases": [
+      "Bleeping Computer"
+    ],
+    "owner": "BleepingComputer LLC",
+    "ownerType": "Independent",
+    "country": "United States",
+    "homepage": "https://www.bleepingcomputer.com/",
+    "mbfc": "https://mediabiasfactcheck.com/bleeping-computer-bias-rating/",
+    "note": ""
+  },
+  "cybernews": {
+    "aliases": [],
+    "owner": "Cybernews",
+    "ownerType": "Independent",
+    "country": "Lithuania",
+    "homepage": "https://cybernews.com/",
+    "mbfc": null,
+    "note": "Not rated by MBFC. Its feed blocks our requests, so it comes through Google News search."
+  },
+  "techarp": {
+    "aliases": [
+      "Tech ARP"
+    ],
+    "owner": "Tech ARP",
+    "ownerType": "Independent",
+    "country": "Malaysia",
+    "homepage": "https://www.techarp.com/",
+    "mbfc": null,
+    "note": "Not rated by MBFC. Its feed blocks our requests, so it comes through Google News search."
+  },
+  "hackernews": {
+    "aliases": [
+      "HN",
+      "news.ycombinator"
+    ],
+    "owner": "Y Combinator",
+    "ownerType": "Private company (startup accelerator)",
+    "country": "United States",
+    "homepage": "https://news.ycombinator.com/",
+    "mbfc": "https://mediabiasfactcheck.com/hacker-news/",
+    "note": "User-submitted links, so it is marked \"mixed credibility\" even though MBFC rates it Mostly Factual."
+  },
+  "reddit": {
+    "aliases": [
+      "r/news"
+    ],
+    "owner": "Reddit, Inc.",
+    "ownerType": "Publicly traded",
+    "country": "United States",
+    "homepage": "https://www.reddit.com/r/news/",
+    "mbfc": null,
+    "note": "User-submitted links; not rated by MBFC."
+  },
+  "slashdot": {
+    "aliases": [
+      "/."
+    ],
+    "owner": "Slashdot Media (BIZX)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://slashdot.org/",
+    "mbfc": null,
+    "note": "User-submitted and editor-picked links; not rated by MBFC."
+  },
+  "slashdot-science": {
+    "aliases": [
+      "/."
+    ],
+    "owner": "Slashdot Media (BIZX)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://slashdot.org/",
+    "mbfc": null,
+    "note": "User-submitted and editor-picked links; not rated by MBFC."
+  },
+  "slashdot-yro": {
+    "aliases": [
+      "/."
+    ],
+    "owner": "Slashdot Media (BIZX)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://slashdot.org/",
+    "mbfc": null,
+    "note": "User-submitted and editor-picked links; not rated by MBFC."
+  },
+  "slashdot-it": {
+    "aliases": [
+      "/."
+    ],
+    "owner": "Slashdot Media (BIZX)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://slashdot.org/",
+    "mbfc": null,
+    "note": "User-submitted and editor-picked links; not rated by MBFC."
+  },
+  "slashdot-hardware": {
+    "aliases": [
+      "/."
+    ],
+    "owner": "Slashdot Media (BIZX)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://slashdot.org/",
+    "mbfc": null,
+    "note": "User-submitted and editor-picked links; not rated by MBFC."
+  },
+  "slashdot-games": {
+    "aliases": [
+      "/."
+    ],
+    "owner": "Slashdot Media (BIZX)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://slashdot.org/",
+    "mbfc": null,
+    "note": "User-submitted and editor-picked links; not rated by MBFC."
+  },
+  "slashdot-entertainment": {
+    "aliases": [
+      "/."
+    ],
+    "owner": "Slashdot Media (BIZX)",
+    "ownerType": "Privately owned",
+    "country": "United States",
+    "homepage": "https://slashdot.org/",
+    "mbfc": null,
+    "note": "User-submitted and editor-picked links; not rated by MBFC. Fetched through Google News search."
+  }
+}

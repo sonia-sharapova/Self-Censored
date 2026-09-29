@@ -1,0 +1,18 @@
+{
+  "name": "self-censored",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Easy-peasy, self-guided news filtration",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server/index.js"
+  },
+  "engines": {
+    "node": ">=22.9"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "rss-parser": "^3.13.0"
+  }
+}

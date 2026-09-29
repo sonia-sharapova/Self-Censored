@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styleguide · Self-Censored</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Averia+Libre:wght@700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+    <link rel="stylesheet" href="css/system.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+    <style>
+        /* Styleguide-only helpers: laying out the specimens, not part of the system */
+        .sg-section { padding: var(--space-6) 0; border-top: 1px solid var(--rule); }
+        .sg-section > .eyebrow { display: block; margin-bottom: var(--space-2); color: var(--ink-muted); }
+        .sg-section > h2 { margin-bottom: var(--space-3); }
+        .sg-section > p { max-width: 70ch; margin-bottom: var(--space-5); }
+        .sg-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+        .sg-swatch { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); font-size: var(--text-xs); }
+        .sg-swatch i { display: block; height: 56px; border-bottom: 1px solid var(--rule-soft); }
+        .sg-swatch span { display: block; padding: var(--space-2) var(--space-3); }
+        .sg-swatch code { color: var(--ink-muted); }
+        .sg-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4); }
+        .sg-type > * + * { margin-top: var(--space-5); }
+        .sg-caption { display: block; margin-bottom: var(--space-1); color: var(--ink-faint); font-size: var(--text-2xs); }
+        .sg-space { display: flex; align-items: flex-end; gap: var(--space-4); flex-wrap: wrap; }
+        .sg-space span { display: block; margin-top: var(--space-1); font-size: var(--text-2xs); color: var(--ink-muted); }
+        .sg-code { overflow-x: auto; padding: var(--space-4); background: var(--paper-sunk); border: 1px solid var(--rule-soft); font-size: var(--text-xs); line-height: 1.6; }
+        .sg-rules { display: grid; gap: var(--space-2); padding-left: var(--space-5); max-width: 75ch; }
+        .sg-frame { width: 260px; border: 1px solid var(--rule-soft); }
+        .sg-frame .sidebar { position: static; height: auto; }
+    </style>
+</head>
+<body>
+
+<p class="censor-bar" aria-hidden="true">%*-- #?%*@&amp;!@#$%--?#$%!@#$%!$@#$%!#$%!!@--#$%!#*@&amp;!@&amp;!@#$%#@--!#*@&amp;#$%!!@!@*#$%!#*@#&amp;!@@#$%!@-@#$%!--$%!@%!#&amp;$%!@#$%!$#%*-- #?%*@&amp;!@#$%--?#$%!@#$%!$@#$%!#$%!!@--#$%!#*@&amp;!@&amp;!@#$%#@--!#*@&amp;#$%!!@!@*#$%!#*@#&amp;!@@#$%!@-@#$%!--$%!@%!#&amp;$%!@#$%!$#</p>
+
+<div class="shell">
+    <aside class="sidebar" aria-label="Styleguide contents">
+        <a class="sidebar__mark" href="/">s*lf</a>
+        <section class="sidebar__section">
+            <div class="sidebar__label"><span class="eyebrow">On this page</span></div>
+            <nav class="sidebar__list">
+                <a class="sidebar__item" href="#principles">Principles</a>
+                <a class="sidebar__item" href="#color">Color</a>
+                <a class="sidebar__item" href="#type">Type</a>
+                <a class="sidebar__item" href="#space">Space &amp; shape</a>
+                <a class="sidebar__item" href="#layout">Layout</a>
+                <a class="sidebar__item" href="#components">Components</a>
+                <a class="sidebar__item" href="#template">New page</a>
+            </nav>
+        </section>
+        <section class="sidebar__section">
+            <div class="sidebar__label"><span class="eyebrow">Theme</span></div>
+            <div class="sidebar__actions">
+                <button class="btn btn--block" type="button" onclick="document.body.classList.toggle('dark')">◐ Toggle dark</button>
+            </div>
+        </section>
+    </aside>
+
+    <div class="shell__main">
+        <header class="header">
+            <div class="header__inner">
+                <div class="title-block">
+                    <h1 class="title">Styleguide</h1>
+                    <p class="subtitle">built from <u>these pieces</u></p>
+                </div>
+                <div class="header__search">
+                    <form class="search" role="search" onsubmit="event.preventDefault()">
+                        <label class="visually-hidden" for="sgSearch">Find</label>
+                        <input class="search__input" id="sgSearch" type="search" placeholder="Find articles that mention…">
+                        <button class="search__go" type="submit">Go</button>
+                    </form>
+                    <ul class="remove-list" style="justify-content: flex-end; margin-top: var(--space-2)"><li><button type="button">nasa</button></li></ul>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="content__inner">
+
+                <section class="sg-section" id="principles">
+                    <span class="eyebrow">01 · Principles</span>
+                    <h2 class="section-title">How it should feel</h2>
+                    <ul class="sg-rules">
+                        <li><strong>privacy4all's frame, Self-Censored's paper.</strong> The censor bar runs flat across the very top. Below it: a frosted left sidebar, then one header row with the Averia Libre title and a short line under it on the left, and a small search bar on the right. The longer site description sits at the bottom of the sidebar. No right-hand nav.</li>
+                        <li><strong>The sidebar is the control panel, and never scrolls.</strong> It is exactly the screen height below the sticky censor bar; favourites that don't fit become "+N more". Topics and Redacted keywords ("× name" lists: the name opens its place in Settings, the × removes it), favourite sources (the same, opening each outlet's page; faded when not in the feed), then Bias and Mood only when switched on, then Reset all filters (red link) and Settings, and the site description last. Refresh is the first item in the summary row above the feed. The feed itself has no tabs.</li>
+                        <li><strong>Search finds, settings hide.</strong> The search bar only ever narrows to articles that mention a word. Words to avoid live in Settings; what they hide is listed in the collapsible summary bar above the feed.</li>
+                        <li><strong>One text width.</strong> <code>.header__inner</code> and <code>.content__inner</code> share <code>--content-max</code>, so the title and the feed line up.</li>
+                        <li><strong>Ruled, square and flat.</strong> Collections sit in hairline grids. Buttons, chips, tags, fields and the pager all use a 2px radius, like the containers, with flat fills and no shadows.</li>
+                        <li><strong>One reading voice.</strong> Trebuchet for everything you read, including descriptions. Averia Libre only for the title and the sidebar mark; IBM Plex Mono only for the search bar, buttons and pager.</li>
+                        <li><strong>Colour means something.</strong> Blue = primary action and selected tab. Pink = hidden, avoided or destructive (maroon on hover). Green = only show. Yellow = limited. Red = words you've chosen (darker on hover, click to remove).</li>
+                    </ul>
+                </section>
+
+                <section class="sg-section" id="color">
+                    <span class="eyebrow">02 · Color</span>
+                    <h2 class="section-title">Tokens</h2>
+                    <p>Use custom properties, never raw hex values in page CSS. Dark mode redefines the same tokens under <code>body.dark</code>. These swatches read the live values.</p>
+                    <div class="sg-swatches" id="swatches"></div>
+                </section>
+
+                <section class="sg-section" id="type">
+                    <span class="eyebrow">03 · Type</span>
+                    <h2 class="section-title">Scale</h2>
+                    <div class="sg-type">
+                        <div><span class="sg-caption">.title · Averia Libre · --text-title (64px desktop) · one per page</span><div class="title" style="margin-top: 0">Self-Censored</div></div>
+                        <div><span class="sg-caption">.subtitle · 15px, one short line under the title, underline the key word</span><p class="subtitle">[willful] ignorance is bliss</p></div>
+                        <div><span class="sg-caption">.section-title · --text-xl</span><h2 class="section-title">Settings section</h2></div>
+                        <div><span class="sg-caption">.card__title · --text-lg</span><h3 class="card__title">OpenAI delays latest model over security concerns</h3></div>
+                        <div><span class="sg-caption">body / descriptions · Trebuchet · --text-md, --text-sm</span><p>Pick your "credible" outlets, block the words you'd rather not read, and enjoy a feed that agrees with you.</p></div>
+                        <div><span class="sg-caption">.eyebrow · --text-2xs, uppercase, 0.1em tracking</span><span class="eyebrow">Topics</span></div>
+                        <div><span class="sg-caption">--font-mono · search bar, buttons, pager</span><button class="btn" type="button">See all →</button></div>
+                    </div>
+                </section>
+
+                <section class="sg-section" id="space">
+                    <span class="eyebrow">04 · Space &amp; shape</span>
+                    <h2 class="section-title">4px base</h2>
+                    <p>Spacing uses <code>--space-1</code>…<code>--space-8</code>. Radii: <code>--radius-chip</code> and <code>--radius-btn</code> are both 2px, so buttons have the same corners as containers, chips, fields and the pager. The censor bar is square.</p>
+                    <div class="sg-space" id="spaces"></div>
+                </section>
+
+                <section class="sg-section" id="layout">
+                    <span class="eyebrow">05 · Layout</span>
+                    <h2 class="section-title">Shell &amp; sidebar</h2>
+                    <p>The <code>.censor-bar</code> comes first, before <code>.shell</code>. <code>.shell</code> is a 240px sticky <code>.sidebar</code> plus <code>.shell__main</code>: a <code>.header</code> (one row: <code>.title-block</code> left, <code>.header__search</code> right), the frosted <code>.content</code> and the <code>.site-footer</code>. Under 900px the sidebar stacks on top. This page is built with it.</p>
+                    <div class="sg-frame">
+                        <div class="sidebar" style="height: auto">
+                            <span class="sidebar__mark">s*lf</span>
+                            <div class="sidebar__section">
+                                <div class="sidebar__label"><span class="eyebrow">Topics</span><span class="sidebar__links"><button class="link-btn" type="button">select all</button><button class="link-btn" type="button">clear</button></span></div>
+                                <ul class="pick-list pick-list--bullets"><li class="pick-list__item"><button class="pick-list__remove" type="button" aria-label="Remove"><span class="pick-list__bullet" aria-hidden="true">•</span><span class="pick-list__x" aria-hidden="true">×</span></button><button class="pick-list__name" type="button">World</button></li><li class="pick-list__item"><button class="pick-list__remove" type="button" aria-label="Remove"><span class="pick-list__bullet" aria-hidden="true">•</span><span class="pick-list__x" aria-hidden="true">×</span></button><button class="pick-list__name" type="button">Science</button></li></ul>
+                            </div>
+                            <div class="sidebar__section">
+                                <div class="sidebar__label"><span class="eyebrow">Redacted</span><span class="sidebar__links"><button class="link-btn" type="button">clear all</button></span></div>
+                                <ul class="pick-list pick-list--bullets pick-list--avoid"><li class="pick-list__item"><button class="pick-list__remove" type="button" aria-label="Remove"><span class="pick-list__bullet" aria-hidden="true">•</span><span class="pick-list__x" aria-hidden="true">×</span></button><button class="pick-list__name" type="button">amazon</button></li></ul>
+                                <button class="pick-list__add" type="button" aria-label="Redact another word">+</button>
+                            </div>
+                            <div class="sidebar__section">
+                                <div class="sidebar__label"><span class="eyebrow">Sources</span><small>2 of 68 in feed</small></div>
+                                <ul class="pick-list sidebar-sources"><li class="pick-list__item"><button class="pick-list__remove" type="button" aria-label="Unstar">×</button><button class="pick-list__name" type="button"><span class="pick-list__source"><span class="logo logo--initials">BB</span><span>BBC News</span></span></button></li><li class="pick-list__item pick-list__item--muted"><button class="pick-list__remove" type="button" aria-label="Unstar">×</button><button class="pick-list__name" type="button"><span class="pick-list__source"><span class="logo logo--initials">NP</span><span>NPR (not in feed)</span></span></button></li></ul>
+                            </div>
+                            <div class="sidebar__section">
+                                <div class="sidebar__label"><span class="eyebrow">Bias</span><span class="sidebar__links"><button class="link-btn" type="button">all</button></span></div>
+                                <div class="stepper"><input class="stepper__range" type="range" min="0" max="2" step="1" value="1" aria-label="Bias: Medium"><div class="stepper__labels"><button type="button" aria-pressed="false">Low</button><button type="button" aria-pressed="true">Medium</button><button type="button" aria-pressed="false">High</button></div></div>
+                            </div>
+                            <div class="sidebar__bottom"><button class="link-btn sidebar__manage-link" type="button">manage filters</button></div>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                <section class="sg-section" id="components">
+                    <span class="eyebrow">06 · Components</span>
+                    <h2 class="section-title">Buttons</h2>
+                    <p>Flat buttons with the containers' 2px corners and no shadows. <code>.btn--primary</code> (blue tint) is the one main action per view; <code>.btn</code> is everything else; <code>.btn--danger</code> is pink and turns maroon on hover; <code>.link-btn--danger</code> is red underlined text for resets; <code>.btn--muted</code> is a quiet grey (Settings); <code>.btn--block</code> fills the sidebar; <code>.btn--icon</code> is a square icon-only button (always with <code>aria-label</code> and <code>title</code>). <code>.link-btn</code> is for quiet inline actions like "all / clear".</p>
+                    <div class="sg-row">
+                        <button class="btn btn--primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V3zM8 3v5h7V3M8 21v-7h8v7"/></svg> Save</button>
+                        <button class="btn" type="button">Refresh <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke-width: 2.4"><path d="M20 11a8 8 0 1 0-2.34 5.66"/><path d="M20 4v7h-7"/></svg></button>
+                        <button class="btn btn--danger" type="button">Delete</button>
+                        <button class="link-btn link-btn--danger" type="button">Reset all filters</button>
+                        <button class="btn btn--muted" type="button">Configure</button>
+                        <button class="btn" type="button" disabled>Disabled</button>
+                        <button class="btn btn--icon" type="button" aria-label="Import" title="Import"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 12-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button>
+                        <button class="link-btn" type="button">show anyway</button>
+                    </div>
+                </section>
+
+                <section class="sg-section">
+                    <h2 class="section-title">Chosen words, chips, tags &amp; logos</h2>
+                    <p>Words you've chosen are a <code>.remove-list</code>: "× word", no underline, removed on click. Keywords to avoid are red (darker on hover); search terms use <code>.remove-list--find</code> and are green. <code>.chip</code> and <code>.tag</code> are small square labels. <code>.logo</code> shows an outlet's image at one height (<code>--logo-size</code>): its wordmark from <code>assets/logo</code> where there's room, its square icon from <code>assets/icons</code> in small spots like the sidebar, then initials. The page trims each file's built-in padding so the marks line up, and a wordmark wider than <code>--logo-fit</code> × its height switches to the icon rather than shrinking.</p>
+                    <div class="sg-row">
+                        <ul class="remove-list"><li><button type="button">amazon</button></li><li><button type="button">trump*</button></li></ul>
+                        <span class="chip">neutral chip</span>
+                        <span class="tag">Label</span>
+                        <span class="logo"><img src="/assets/icons/ars.png" alt="Ars Technica"></span>
+                        <span class="logo"><img src="/assets/logo/ars.svg" alt="Ars Technica"></span>
+                        <span class="logo logo--initials" role="img" aria-label="The Guardian">GU</span>
+                    </div>
+                </section>
+
+                <section class="sg-section">
+                    <h2 class="section-title">Summary row, ruled grid &amp; card</h2>
+                    <p>Above a feed, a <code>.summary-row</code>: Refresh first (<code>.summary-bar__button</code>, the same container style), then one <code>.summary-bar</code> line: "Displaying 87 articles (16 hidden)" on the left, "16 hidden" with a chevron on the right. It opens to list what was hidden, each with its reason and "show anyway"; with nothing hidden it doesn't open (<code>.summary-bar--static</code>). Below it, <code>.ruled-grid</code> gives 3 → 2 → 1 hairline columns of <code>.card</code>s, with the source logo in the card's top-left corner (no background behind it) and the time on the right. An article with no image shows the outlet's square icon, large, in the image space.</p>
+                    <div class="summary-row">
+                    <button class="summary-bar summary-bar__button" type="button">Refresh <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66"/><path d="M20 4v7h-7"/></svg></button>
+                    <details class="summary-bar">
+                        <summary><span class="status">ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧ Displaying 87 articles (2 hidden)</span><span class="summary-bar__toggle">2 hidden</span></summary>
+                        <ul class="summary-bar__list">
+                            <li><span class="summary-bar__title">An article you avoided (NPR)</span><span class="summary-bar__reason">avoided: trump*</span><button class="link-btn" type="button">show anyway</button></li>
+                            <li><span class="summary-bar__title">Another one (CNN)</span><span class="summary-bar__reason">avoided: amazon</span><button class="link-btn" type="button">show anyway</button></li>
+                        </ul>
+                    </details>
+                    </div>
+                    <div class="ruled-grid">
+                        <article class="card">
+                            <div class="card__meta"><span class="logo"><img src="/assets/icons/ars.png" alt="Ars Technica"></span><time>44m ago</time></div>
+                            <div class="card__media"><div class="card__placeholder">₍^. .^₎⟆<small>Ars Technica</small></div></div>
+                            <h3 class="card__title"><a class="card__link" href="#">The future of filtering: standardization or stagnation?</a></h3>
+                            <p class="card__excerpt">Descriptions use the body font, never a typewriter face.</p>
+                            <span class="card__more" aria-hidden="true">Read more on Ars Technica ↗</span>
+                        </article>
+                        <article class="card">
+                            <div class="card__meta"><span class="logo logo--initials" role="img" aria-label="The Guardian">GU</span><time>2h ago</time></div>
+                            <div class="card__media"><div class="card__placeholder">₍^. .^₎⟆<small>The Guardian</small></div></div>
+                            <h3 class="card__title"><a class="card__link" href="#">A card whose outlet has no icon shows initials</a></h3>
+                            <p class="card__excerpt">The title link covers the whole card, so the card is one link.</p>
+                            <span class="card__more" aria-hidden="true">Read more ↗</span>
+                        </article>
+                        <div class="grid-message"><h3>ᯓ★ Empty state</h3><p><code>.grid-message</code> spans every column for loading, empty and error states.</p></div>
+                    </div>
+                </section>
+
+                <section class="sg-section">
+                    <h2 class="section-title">Pager</h2>
+                    <p>15 items per page. First, Previous, the first and last page numbers with two either side of the current one, Next and Last, then a one-line summary.</p>
+                    <nav class="pager" aria-label="Example pages">
+                        <button class="pager__btn" type="button">« First</button>
+                        <button class="pager__btn" type="button">‹ Previous</button>
+                        <button class="pager__btn" type="button">1</button>
+                        <span class="pager__gap">…</span>
+                        <button class="pager__btn" type="button">4</button>
+                        <button class="pager__btn" type="button" aria-current="page" disabled>5</button>
+                        <button class="pager__btn" type="button">6</button>
+                        <span class="pager__gap">…</span>
+                        <button class="pager__btn" type="button">12</button>
+                        <button class="pager__btn" type="button">Next ›</button>
+                        <button class="pager__btn" type="button">Last »</button>
+                        <p class="pager__summary">Page 5 of 12 · articles 61–75 of 176</p>
+                    </nav>
+                </section>
+
+                <section class="sg-section">
+                    <h2 class="section-title">Settings &amp; source lists</h2>
+                    <p>Settings is a <code>.modal__panel--wide</code> (860px, text a size larger than the sidebar) split into <code>.panel-section</code>s: content first (keywords, topics, bias, mood, sources), then Feed and Theme. Inputs with an action reuse <code>.search</code>. A list of records uses the FortifyAI agents-page pattern: a <code>.toolbar</code> (search, a <code>.filter-pop</code> of single-choice <code>.chip-choices</code> groups with a count <code>.badge</code>, and a grid/rows <code>.view-toggle</code>), then either a <code>.data-table</code> (rows) or a <code>.source-grid</code> of <code>.source-card</code>s. Credibility shows as a <code>.cred-status</code> (green check, yellow, red, grey); bias as a <code>.bias-level</code> (only High stands out, in red), with MBFC's label as a dashed <code>.bias-badge</code> on the detail page. A <code>.selection-bar</code> heads the list: select-all checkbox, "N of M in feed", Select all and Clear. Grid cards toggle on click and show selection with a thicker border and tint. Optional settings use a <code>.switch</code>. Clicking a record opens its <code>.detail</code> page in the same modal, with "← Back".</p>
+                    <div class="panel-section">
+                        <span class="eyebrow">Keywords to avoid</span>
+                        <form class="search" style="max-width: 420px; margin-bottom: var(--space-3)" onsubmit="event.preventDefault()"><label class="visually-hidden" for="sgAvoid">Keyword to avoid</label><input class="search__input" id="sgAvoid" type="text" placeholder="e.g. tariffs, trump*"><button class="search__go" type="submit">Add</button></form>
+                        <ul class="remove-list"><li><button type="button">amazon</button></li><li><button type="button">trump*</button></li></ul>
+                    </div>
+                    <div class="panel-section">
+                        <span class="eyebrow">Sources</span>
+                        <div class="toolbar">
+                            <div class="search toolbar__search"><label class="visually-hidden" for="sgSourceSearch">Search</label><input class="search__input" id="sgSourceSearch" type="search" placeholder="Search outlets, owners, aliases…"></div>
+                            <div class="filter-pop"><button class="btn toolbar__button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v6m0 4v6M12 4v2m0 4v10M19 4v10m0 4v2M3 10h4M10 6h4M17 14h4"/></svg> Filters <span class="badge">1</span></button></div>
+                            <div class="view-toggle" role="group" aria-label="View"><button type="button" aria-pressed="false" aria-label="Grid view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></button><button type="button" aria-pressed="true" aria-label="Rows view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
+                        </div>
+                        <div class="filter-pop__panel" style="position: static; margin-bottom: var(--space-4)"><div class="filter-pop__group"><p class="eyebrow">Credibility</p><div class="chip-choices"><button type="button" aria-pressed="true">Any</button><button type="button" aria-pressed="false">High</button><button type="button" aria-pressed="false">Medium</button><button type="button" aria-pressed="false">Low</button></div></div></div>
+                        <div class="data-table-wrap"><table class="data-table"><thead><tr><th></th><th>Outlet</th><th></th><th>Bias</th><th>Credibility</th><th></th></tr></thead><tbody>
+                            <tr><td><input class="feed-check" type="checkbox" checked aria-label="In feed"></td><td class="data-table__logo"><span class="logo"><img src="/assets/icons/ars.png" alt=""></span></td><td class="data-table__name">Ars Technica<small>Condé Nast</small></td><td><span class="bias-badge bias-badge--low">Least Biased</span></td><td><span class="cred-status cred-status--high"><span class="cred-status__icon" aria-hidden="true">✓</span>High credibility</span></td><td><button class="star" type="button" aria-pressed="true" aria-label="Unfavourite">★</button></td></tr>
+                            <tr><td><input class="feed-check" type="checkbox" aria-label="In feed"></td><td class="data-table__logo"><span class="logo logo--initials">NY</span></td><td class="data-table__name">New York Post<small>mixed credibility</small></td><td><span class="bias-badge">Right-Center</span></td><td><span class="cred-status cred-status--medium"><span class="cred-status__icon" aria-hidden="true">!</span>Medium credibility</span></td><td><button class="star" type="button" aria-pressed="false" aria-label="Favourite">☆</button></td></tr>
+                            <tr><td><input class="feed-check" type="checkbox" aria-label="In feed"></td><td class="data-table__logo"><span class="logo logo--initials">FN</span></td><td class="data-table__name">Fox News<small>mixed credibility</small></td><td><span class="bias-badge bias-badge--high">Right</span></td><td><span class="cred-status cred-status--low"><span class="cred-status__icon" aria-hidden="true">✕</span>Low credibility</span></td><td><button class="star" type="button" aria-pressed="false" aria-label="Favourite">☆</button></td></tr>
+                        </tbody></table></div>
+                        <div class="source-grid" style="margin-top: var(--space-4); max-width: 480px">
+                            <article class="source-card"><div class="source-card__top"><div class="source-card__logo"><span class="logo"><img src="/assets/icons/ars.png" alt=""></span></div><button class="star" type="button" aria-pressed="true" aria-label="Unfavourite">★</button></div><h4 class="source-card__name">Ars Technica</h4><div class="source-card__badges"><span class="cred-status cred-status--high"><span class="cred-status__icon" aria-hidden="true">✓</span>High credibility</span><span class="bias-badge bias-badge--low">Least Biased</span></div><dl class="facts"><div><dt>Topics</dt><dd>Technology</dd></div><div><dt>Factual</dt><dd>High</dd></div></dl><label class="source-card__foot"><input class="feed-check" type="checkbox" checked> In feed <span class="source-card__more">Details ›</span></label></article>
+                        </div>
+                        <div class="preferences-bar">
+                            <div class="option-row"><button class="btn btn--icon" type="button" aria-label="Import" title="Import"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 12-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button><button class="btn btn--icon" type="button" aria-label="Export" title="Export"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0-12-4 4m4-4 4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button></div>
+                            <button class="btn btn--primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V3zM8 3v5h7V3M8 21v-7h8v7"/></svg> Save</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sg-section" id="template">
+                    <span class="eyebrow">07 · New pages</span>
+                    <h2 class="section-title">Page template</h2>
+                    <p>Start every new page from this skeleton. Page-only layout goes in <code>css/&lt;page&gt;.css</code> using tokens; anything reusable goes into <code>system.css</code> and onto this page. Full rules: <code>docs/STYLEGUIDE.md</code>.</p>
+                    <pre class="sg-code"><code>&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Averia+Libre:wght@700&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap"&gt;
+&lt;link rel="stylesheet" href="css/system.css"&gt;
+&lt;link rel="stylesheet" href="css/my-page.css"&gt;   &lt;!-- optional, layout only --&gt;
+
+&lt;p class="censor-bar" aria-hidden="true"&gt;%*-- #?%*@&amp;amp;!…&lt;/p&gt;   &lt;!-- full width, flat against the top --&gt;
+&lt;div class="shell"&gt;
+  &lt;aside class="sidebar"&gt;
+    &lt;a class="sidebar__mark" href="/"&gt;s*lf&lt;/a&gt;
+    &lt;section class="sidebar__section"&gt; .sidebar__label + .sidebar__list of .sidebar__item &lt;/section&gt;
+    &lt;p class="sidebar__about"&gt;Longer site description&lt;/p&gt;
+  &lt;/aside&gt;
+  &lt;div class="shell__main"&gt;
+    &lt;header class="header"&gt;&lt;div class="header__inner"&gt;
+      &lt;div class="title-block"&gt;&lt;h1 class="title"&gt;Page Name&lt;/h1&gt;&lt;p class="subtitle"&gt;short &lt;u&gt;line&lt;/u&gt;&lt;/p&gt;&lt;/div&gt;
+      &lt;div class="header__search"&gt;&lt;form class="search"&gt; .search__input · .search__go &lt;/form&gt;&lt;/div&gt;
+    &lt;/div&gt;&lt;/header&gt;
+    &lt;main class="content"&gt;&lt;div class="content__inner"&gt;
+      &lt;details class="summary-bar"&gt; … &lt;/details&gt;
+      &lt;div class="ruled-grid"&gt; .card … &lt;/div&gt;
+      &lt;nav class="pager"&gt; … &lt;/nav&gt;
+    &lt;/div&gt;&lt;/main&gt;
+    &lt;footer class="site-footer"&gt; … &lt;/footer&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </section>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <span>Self-Censored styleguide (ง•̀o•́)ง</span>
+            <nav aria-label="Footer"><a href="/">Back to the news</a></nav>
+        </footer>
+    </div>
+</div>
+
+<script>
+    // Swatches and spacing are drawn from the live tokens, so this page can't drift from system.css
+    const tokens = ['--paper', '--paper-raised', '--paper-sunk', '--ink', '--ink-soft', '--ink-muted', '--ink-faint', '--rule', '--rule-soft',
+        '--slate-50', '--slate-300', '--slate-600', '--action', '--action-ink', '--block-bg', '--only-bg', '--limited-bg', '--accent'];
+    const swatches = document.getElementById('swatches');
+    function drawSwatches() {
+        swatches.innerHTML = '';
+        const style = getComputedStyle(document.body);
+        tokens.forEach(name => {
+            const cell = document.createElement('div');
+            cell.className = 'sg-swatch';
+            const chip = document.createElement('i');
+            chip.style.background = `var(${name})`;
+            const label = document.createElement('span');
+            const strong = document.createElement('strong');
+            strong.textContent = name;
+            const code = document.createElement('code');
+            code.textContent = style.getPropertyValue(name).trim();
+            label.append(strong, document.createElement('br'), code);
+            cell.append(chip, label);
+            swatches.appendChild(cell);
+        });
+    }
+    drawSwatches();
+    new MutationObserver(drawSwatches).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    const spaces = document.getElementById('spaces');
+    [1, 2, 3, 4, 5, 6, 7, 8].forEach(step => {
+        const wrap = document.createElement('div');
+        const bar = document.createElement('div');
+        bar.style.cssText = `width: var(--space-${step}); height: var(--space-${step}); background: var(--slate-300)`;
+        const label = document.createElement('span');
+        label.textContent = `--space-${step}`;
+        wrap.append(bar, label);
+        spaces.appendChild(wrap);
+    });
+</script>
+</body>
+</html>

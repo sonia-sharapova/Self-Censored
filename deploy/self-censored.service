@@ -1,0 +1,27 @@
+[Unit]
+Description=Self-Censored news server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=selfcensored
+Group=selfcensored
+WorkingDirectory=/opt/self-censored
+EnvironmentFile=-/etc/self-censored.env
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=3917
+ExecStart=/usr/local/bin/node server/index.js
+Restart=on-failure
+RestartSec=5
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadOnlyPaths=/opt/self-censored
+
+[Install]
+WantedBy=multi-user.target

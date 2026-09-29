@@ -1,0 +1,39 @@
+/* ==============================================
+   NEWS PAGE (index.html)
+   ==============================================
+   Arranges system.css components for the feed. No new colours, fonts or
+   spacing values here: use the tokens. */
+
+/* Search terms sit under the search bar, right-aligned, on one line of fixed
+   height (scrolling sideways if long), so adding one never moves the title */
+.search-keywords {
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    height: 26px;
+    font-size: var(--text-md);   /* search words read at body size */
+    margin-top: var(--space-2);
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: none;
+}
+
+/* Card corner: the outlet's square icon */
+.card__meta .logo {
+    --logo-size: 24px;
+    --logo-fit: 3;
+}
+
+/* Settings: avoided keywords */
+.keyword-manager {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.keyword-manager .search {
+    max-width: 420px;
+}
+
+.search-keywords button {
+    font-size: var(--text-md);
+}
