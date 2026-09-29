@@ -14,7 +14,7 @@ const DEFAULT_SOURCES = ['nyt', 'cnn', 'bbc', 'ap', 'reuters'];   // the five mo
 // One of each kind of keyword: a wildcard at either end, a plain word, an exact match
 const EXAMPLE_KEYWORDS = ['*ai', 'war', '"Trump"', 'kill*'];
 const DEFAULT_BLOCKED = ['sam altman', ...EXAMPLE_KEYWORDS];
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 12;   // four rows of three
 
 // Source catalog from /api/sources: [{id, name, topics, icon, credible, available}]
 let sourceCatalog = [];
@@ -467,6 +467,7 @@ async function initializeApp() {
     renderSources();
     renderFilters();   // again, now that bias hover text can list outlets
     if (settingsOpen()) showSettingsPage();
+    else document.getElementById('navNewsroom')?.setAttribute('aria-current', 'page');
     appReady = true;   // from here on, a save means you changed something
     loadNews();
 }
@@ -567,7 +568,7 @@ function renderFilters() {
 
 // Sidebar sections fold: click a heading to close or open its list (remembered
 // when saving is on), so the sidebar never has to scroll
-let sidebarFolded = new Set(loadFromLocalStorage('sidebarFolded', []));
+let sidebarFolded = new Set(loadFromLocalStorage('sidebarFolded', ['topics', 'sources', 'avoid']));   // every section starts closed
 
 function toggleSidebarSection(key) {
     const open = sidebarFolded.has(key) || autoFolded.has(key);
@@ -2013,7 +2014,7 @@ function openSourceDetail(sourceId) {
     closeSourceFilters();
     if (!settingsOpen()) history.pushState(null, '', `#settings/source:${sourceId}`);
     document.getElementById('settingsPage').hidden = false;
-    document.querySelector('.header').hidden = true;
+    document.querySelector('.title-block').hidden = true;
     document.querySelector('.content').hidden = true;
     document.getElementById('settingsMain').hidden = true;
     document.getElementById('sourceDetail').hidden = false;
@@ -2563,7 +2564,7 @@ function renderPager(total) {
     };
 
     pager.append(
-        button('« First', 1, { ariaLabel: 'First page' }),
+        Object.assign(button('« First', 1, { ariaLabel: 'First page' }), { className: 'pager__btn pager__btn--first' }),
         button('‹ Previous', currentPage - 1, { ariaLabel: 'Previous page' })
     );
 
@@ -2581,7 +2582,7 @@ function renderPager(total) {
 
     pager.append(
         button('Next ›', currentPage + 1, { ariaLabel: 'Next page' }),
-        button('Last »', pageCount, { ariaLabel: 'Last page' })
+        Object.assign(button('Last »', pageCount, { ariaLabel: 'Last page' }), { className: 'pager__btn pager__btn--last' })
     );
 
     const summary = document.createElement('p');
@@ -2978,9 +2979,11 @@ function showSettingsPage(section = location.hash.slice('#settings/'.length) || 
     const page = document.getElementById('settingsPage');
     if (!page) return;
     page.hidden = !open;
-    document.querySelector('.header').hidden = open;
+    document.querySelector('.title-block').hidden = open;   // tabs stay; the site title is for the feed
     document.querySelector('.content').hidden = open;
     document.querySelector('.sidebar__settings')?.setAttribute('aria-current', open ? 'page' : 'false');
+    document.getElementById('navNewsroom')?.setAttribute('aria-current', open ? 'false' : 'page');
+    document.querySelector('.site-tabs__link')?.setAttribute('aria-current', open ? 'page' : 'false');
     if (!open) {
         closeSourceFilters();   // the library and its ticks stay as they were for when you come back
         window.scrollTo(0, 0);

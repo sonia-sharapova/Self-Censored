@@ -23,10 +23,11 @@
     <aside class="sidebar" aria-label="Filters">
         <div class="sidebar__brand">
             <a class="sidebar__mark" href="#" onclick="goHome(event)">s*lf</a>
+            <p class="sidebar__tagline">[willful] ignorance is bliss</p>
         </div>
 
         <nav class="sidebar-nav" aria-label="Pages">
-            <a class="sidebar-nav__item" id="navNewsroom" href="#newsroom"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5zM17 9h3v8a2 2 0 0 1-2 2M7 9h7M7 13h7M7 16h4"/></svg>Newsroom</a>
+            <a class="sidebar-nav__item" id="navNewsroom" href="#newsroom">Newsroom</a>
         </nav>
 
         <h2 class="sidebar__heading">Configure</h2>
@@ -109,10 +110,9 @@
         <!-- Header: the search (full width), then the title and short description -->
         <header class="header">
             <div class="header__inner">
-                <!-- The site title: on the landing page only -->
+                <!-- The site title (hidden on Settings), tabs on the right -->
                 <div class="title-block">
                     <h1 class="title">Self-Censored</h1>
-                    <p class="subtitle">[willful] ignorance is bliss</p>
                 </div>
                 <nav class="site-tabs" aria-label="Site">
                     <div class="nav-menu">
@@ -147,30 +147,8 @@
             </div>
         </header>
 
-        <!-- LANDING (#): a short introduction, then into the newsroom -->
-        <main class="landing" id="landingPage" hidden>
-            <div class="landing__inner">
-                <p class="landing__lede">A news reader that leaves out what you'd rather not see. Pick your outlets, redact the words and people you're tired of, and set the tone.</p>
-                <div class="landing__actions">
-                    <a class="btn btn--primary landing__cta" href="#newsroom">Open the newsroom →</a>
-                    <a class="btn" href="#settings" onclick="event.preventDefault(); openSettings()">Set up your filters</a>
-                </div>
-                <div class="landing__cards">
-                    <a class="landing-card" href="#settings/keywords" onclick="event.preventDefault(); openSettings('keywords')">
-                        <strong>Redact</strong><span>Hide every story that mentions a word, a person or a pattern.</span>
-                    </a>
-                    <a class="landing-card" href="#settings/sources" onclick="event.preventDefault(); openSettings('sources')">
-                        <strong>Choose sources</strong><span>60 outlets, rated for bias and credibility. Keep the ones you trust.</span>
-                    </a>
-                    <a class="landing-card" href="#settings/mood" onclick="event.preventDefault(); openSettings('mood')">
-                        <strong>Set the tone</strong><span>Tired of bad news? Tilt the feed toward the hopeful.</span>
-                    </a>
-                </div>
-            </div>
-        </main>
-
-        <!-- NEWSROOM (#newsroom): the news stream -->
-        <main class="content" id="newsroomPage" hidden>
+                <!-- NEWSROOM: the news stream -->
+        <main class="content" id="newsroomPage">
             <div class="content__inner">
                                 <!-- Search and Refresh, then the stories -->
                 <div class="newsroom-bar">
@@ -221,12 +199,6 @@
                     <header class="settings-head">
                         <h1 id="settingsTitle" class="settings-head__title">Settings</h1>
                         <p class="settings-head__sub">Configure your individual preferences for your news feed. Changes apply straight away and save as you go.</p>
-                        <form class="search settings-search" role="search" onsubmit="submitSettingsSearch(event)">
-                            <label class="visually-hidden" for="settingsSearch">Look up a setting, topic or outlet</label>
-                            <input class="search__input" id="settingsSearch" type="search" list="settingsSearchList" placeholder="Look up a setting, topic or outlet…" autocomplete="off">
-                            <button class="search__go" type="submit">Go</button>
-                            <datalist id="settingsSearchList"></datalist>
-                        </form>
                     </header>
 
                     <!-- Tabs across the top; each tab has its own section nav on the left -->
