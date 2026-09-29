@@ -11,6 +11,7 @@ import path from 'node:path';
 import { adapters, isAvailable } from './adapters.js';
 import { isNewsArticle } from './filters.js';
 import { classifyMoods } from './mood.js';
+import { addMissingImages } from './images.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT) || 3000;
@@ -23,8 +24,8 @@ const SOURCES_BY_ID = Object.fromEntries(SOURCES.map(s => [s.id, s]));
 // Ownership, aliases, links and notes for each outlet's detail page
 const SOURCE_DETAILS = JSON.parse(readFileSync(path.join(__dirname, 'source-details.json'), 'utf8'));
 const ASSETS_DIR = path.join(__dirname, '..', 'assets');
-const ICONS_DIR = path.join(ASSETS_DIR, 'icons');   // square marks
-const LOGOS_DIR = path.join(ASSETS_DIR, 'logo');    // wide wordmarks
+const ICONS_DIR = path.join(ASSETS_DIR, 'icon');    // square marks, named <source id>.<ext>
+const LOGOS_DIR = path.join(ASSETS_DIR, 'logo');    // wide wordmarks, named <source id>.<ext>
 
 // ==============================================
 // CACHE
@@ -108,13 +109,15 @@ function fetchedVia(source) {
 }
 
 app.get('/api/sources', (req, res) => {
-    res.json(SOURCES.map(({ id, name, category, topics, icon, logo, bias, credibility, factual, credible }) => ({
+    res.json(SOURCES.map(({ id, name, tier, paywall, category, topics, icon, logo, bias, credibility, factual, credible }) => ({
         id,
         name,
+        tier: [1, 2, 3].includes(tier) ? tier : 3,   // popularity: 1 household name, 2 well known, 3 niche
+        paywall: paywall === true,                  // most articles need a subscription
         category,
         topics: topics || [category],
         // Only offer icons that exist, so a renamed file falls back to initials instead of a 404
-        icon: icon && existsSync(path.join(ICONS_DIR, icon)) ? `/assets/icons/${encodeURIComponent(icon)}` : null,
+        icon: icon && existsSync(path.join(ICONS_DIR, icon)) ? `/assets/icon/${encodeURIComponent(icon)}` : null,
         logo: logo && existsSync(path.join(LOGOS_DIR, logo)) ? `/assets/logo/${encodeURIComponent(logo)}` : null,
         bias: bias || null,
         biasLevel: biasLevel(bias),
@@ -142,15 +145,17 @@ app.get('/api/news', async (req, res) => {
     ));
     const failed = requested.filter((_, i) => results[i].length === 0).map(s => s.name);
 
-    const articles = (await classifyMoods(removeDuplicates(results.flat()).filter(isNewsArticle)))
+    const sorted = (await classifyMoods(removeDuplicates(results.flat()).filter(isNewsArticle)))
         .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+    // Pictures for articles whose feed had none (newest first; see images.js)
+    const articles = await addMissingImages(sorted);
 
     res.set('Cache-Control', 'public, max-age=60');
     res.json({ articles, failed });
 });
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
-// Outlet logos live beside public/ in assets/icons (see "icon" in sources.json)
+// Outlet images live beside public/: assets/icon and assets/logo, each file named <source id>.<ext>
 app.use('/assets', express.static(ASSETS_DIR, { maxAge: '7d' }));
 
 app.listen(PORT, HOST, () => {

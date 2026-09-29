@@ -371,17 +371,6 @@
     "mbfc": "https://mediabiasfactcheck.com/al-jazeera/",
     "note": "MBFC rates its factual reporting Mixed, so the app marks it \"mixed credibility\"."
   },
-  "scmp": {
-    "aliases": [
-      "SCMP"
-    ],
-    "owner": "Alibaba Group",
-    "ownerType": "Corporate",
-    "country": "Hong Kong",
-    "homepage": "https://www.scmp.com/",
-    "mbfc": "https://mediabiasfactcheck.com/south-china-morning-post/",
-    "note": "MBFC rates its factual reporting Mixed, so the app marks it \"mixed credibility\"."
-  },
   "economist": {
     "aliases": [
       "Economist"
@@ -431,17 +420,6 @@
     "country": "United States",
     "homepage": "https://www.vox.com/",
     "mbfc": "https://mediabiasfactcheck.com/vox/",
-    "note": ""
-  },
-  "motherjones": {
-    "aliases": [
-      "MoJo"
-    ],
-    "owner": "Foundation for National Progress",
-    "ownerType": "Nonprofit",
-    "country": "United States",
-    "homepage": "https://www.motherjones.com/",
-    "mbfc": "https://mediabiasfactcheck.com/mother-jones/",
     "note": ""
   },
   "nationalreview": {
@@ -677,82 +655,5 @@
     "homepage": "https://www.reddit.com/r/news/",
     "mbfc": null,
     "note": "User-submitted links; not rated by MBFC."
-  },
-  "slashdot": {
-    "aliases": [
-      "/."
-    ],
-    "owner": "Slashdot Media (BIZX)",
-    "ownerType": "Privately owned",
-    "country": "United States",
-    "homepage": "https://slashdot.org/",
-    "mbfc": null,
-    "note": "User-submitted and editor-picked links; not rated by MBFC."
-  },
-  "slashdot-science": {
-    "aliases": [
-      "/."
-    ],
-    "owner": "Slashdot Media (BIZX)",
-    "ownerType": "Privately owned",
-    "country": "United States",
-    "homepage": "https://slashdot.org/",
-    "mbfc": null,
-    "note": "User-submitted and editor-picked links; not rated by MBFC."
-  },
-  "slashdot-yro": {
-    "aliases": [
-      "/."
-    ],
-    "owner": "Slashdot Media (BIZX)",
-    "ownerType": "Privately owned",
-    "country": "United States",
-    "homepage": "https://slashdot.org/",
-    "mbfc": null,
-    "note": "User-submitted and editor-picked links; not rated by MBFC."
-  },
-  "slashdot-it": {
-    "aliases": [
-      "/."
-    ],
-    "owner": "Slashdot Media (BIZX)",
-    "ownerType": "Privately owned",
-    "country": "United States",
-    "homepage": "https://slashdot.org/",
-    "mbfc": null,
-    "note": "User-submitted and editor-picked links; not rated by MBFC."
-  },
-  "slashdot-hardware": {
-    "aliases": [
-      "/."
-    ],
-    "owner": "Slashdot Media (BIZX)",
-    "ownerType": "Privately owned",
-    "country": "United States",
-    "homepage": "https://slashdot.org/",
-    "mbfc": null,
-    "note": "User-submitted and editor-picked links; not rated by MBFC."
-  },
-  "slashdot-games": {
-    "aliases": [
-      "/."
-    ],
-    "owner": "Slashdot Media (BIZX)",
-    "ownerType": "Privately owned",
-    "country": "United States",
-    "homepage": "https://slashdot.org/",
-    "mbfc": null,
-    "note": "User-submitted and editor-picked links; not rated by MBFC."
-  },
-  "slashdot-entertainment": {
-    "aliases": [
-      "/."
-    ],
-    "owner": "Slashdot Media (BIZX)",
-    "ownerType": "Privately owned",
-    "country": "United States",
-    "homepage": "https://slashdot.org/",
-    "mbfc": null,
-    "note": "User-submitted and editor-picked links; not rated by MBFC. Fetched through Google News search."
   }
 }

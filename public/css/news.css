@@ -9,9 +9,9 @@
 .search-keywords {
     flex-wrap: nowrap;
     justify-content: flex-end;
-    height: 26px;
+    height: 24px;
     font-size: var(--text-md);   /* search words read at body size */
-    margin-top: var(--space-2);
+    margin-top: 4px;
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;

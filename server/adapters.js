@@ -4,6 +4,7 @@
 // frontend expects: {title, description, content, url, urlToImage, publishedAt, source, author}
 // ==============================================
 
+import { unproxyImage } from './images.js';
 import Parser from 'rss-parser';
 
 const USER_AGENT = 'Mozilla/5.0 (compatible; SelfCensored/1.0; +https://soniapolis.com)';
@@ -19,6 +20,8 @@ const rssParser = new Parser({
         item: [
             ['media:content', 'mediaContent', { keepArray: true }],
             ['media:thumbnail', 'mediaThumbnail'],
+            ['media:group', 'mediaGroup'],    // ABC Australia nests its media:content in here
+            ['image', 'itemImage'],           // CBS: a plain <image>URL</image> per item
             ['content:encoded', 'contentEncoded']
         ]
     }
@@ -63,16 +66,25 @@ function toIsoDate(value) {
 // RSS / Atom
 // ----------------------------------------------
 
+// CBS lists a 60x60 thumbnail whose size is signed into the URL; without the
+// /thumbnail/WxH/<hash> part it serves the full picture
+function fullSizeImage(url) {
+    return url.replace(/\/thumbnail\/\d+x\d+\/[0-9a-f]+\//i, '/');
+}
+
 function rssImage(item) {
-    const media = item.mediaContent?.find(m => m?.$?.url && (!m.$.medium || m.$.medium === 'image'));
+    const isImage = m => m?.$?.url && (!m.$.medium || m.$.medium === 'image');
+    const media = item.mediaContent?.find(isImage)
+        || [].concat(item.mediaGroup?.['media:content'] || []).find(isImage);
     if (media) return media.$.url;
+    if (typeof item.itemImage === 'string' && /^https?:\/\//.test(item.itemImage.trim())) return fullSizeImage(item.itemImage.trim());
     if (item.mediaThumbnail?.$?.url) return item.mediaThumbnail.$.url;
     if (item.enclosure?.url && (item.enclosure.type || '').startsWith('image')) return item.enclosure.url;
 
     // Images embedded in the body are often share buttons or tracking pixels, not the story image
     const html = item.contentEncoded || item.content || '';
-    const embedded = [...html.matchAll(/<img[^>]+src="([^"]+)"/gi)]
-        .map(match => match[1])
+    const embedded = [...html.matchAll(/<img[^>]+src=(["'])(.+?)\1/gi)]   // NPR uses single quotes
+        .map(match => match[2])
         .find(src => !/icon|logo|pixel|feedburner|share|badge|\.gif(\?|$)/i.test(src));
     return embedded || null;
 }
@@ -84,7 +96,9 @@ async function rss(source) {
         description: truncate(item.contentSnippet ? stripHtml(item.contentSnippet) : stripHtml(item.content || item.summary)),
         content: stripHtml(item.contentEncoded || '').substring(0, CONTENT_LIMIT),
         url: item.link,
-        urlToImage: rssImage(item),
+        urlToImage: unproxyImage(rssImage(item)),
+        // Reddit posts link to the news story as "[link]"; its page has the picture
+        imageFrom: (item.content || '').match(/<a href="(https?:[^"]+)">\[link\]<\/a>/)?.[1] || null,
         publishedAt: toIsoDate(item.isoDate || item.pubDate),
         source: source.name,
         author: item.creator || item.author || ''
@@ -178,7 +192,7 @@ async function spaceflight(source) {
         description: truncate(article.summary),
         content: '',
         url: article.url,
-        urlToImage: article.image_url,
+        urlToImage: unproxyImage(article.image_url),
         publishedAt: toIsoDate(article.published_at),
         source: source.name,
         author: article.news_site
