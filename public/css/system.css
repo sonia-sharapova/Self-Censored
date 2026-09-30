@@ -6832,3 +6832,1473 @@ body.dark .bias-tag--high { color: #ef8f80; }
     letter-spacing: 0.1em;
     text-transform: uppercase;
 }
+
+/* Room under the title before the search */
+.header {
+    padding-bottom: var(--space-5);
+}
+
+/* Search and Refresh share the news grid's border */
+.newsroom-bar .search,
+.newsroom-bar .search__go,
+.newsroom-bar .summary-bar__button {
+    border-color: var(--rule);
+}
+
+.newsroom-bar .search__go {
+    border-left: 1px solid var(--rule);
+}
+
+/* The grid starts right under the search */
+#newsContainer {
+    margin-top: 0;
+}
+
+/* More room under the title */
+.header {
+    padding-bottom: var(--space-6);
+}
+
+/* Search and Refresh: full borders again, sitting directly on the grid
+   (the grid tucks up by 1px so the two borders become one line) */
+.newsroom-bar,
+.newsroom-bar__search {
+    margin: 0;
+}
+
+.newsroom-bar .search,
+.newsroom-bar .summary-bar__button {
+    border-bottom: 1px solid var(--rule);
+}
+
+.newsroom-bar .search__input,
+.newsroom-bar .search__go,
+.newsroom-bar .summary-bar__button {
+    height: 34px;
+}
+
+#newsContainer {
+    margin-top: -1px;
+}
+
+/* Sidebar: more room after s*lf, a line after Mood, and Settings framed top and right */
+.sidebar__brand {
+    margin-bottom: var(--space-6);
+}
+
+#sidebarMoodSection {
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.sidebar__settings {
+    border-top: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+}
+
+.newsroom-bar .summary-bar__button {
+    margin: 0;
+}
+
+.newsroom-bar .summary-bar__button {
+    box-sizing: border-box;
+    height: 36px;
+}
+
+/* Library: both lists get the same plain heading, arrow first, folding its list */
+.library-heading-row {
+    margin: var(--space-4) 0 var(--space-3);
+}
+
+.library-heading-row .library-heading--toggle {
+    flex: 0 1 auto;
+    justify-content: flex-start;
+    gap: var(--space-2);
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-size: var(--text-md);
+    font-weight: 600;
+}
+
+.library-heading-row .library-heading--toggle:hover {
+    color: var(--action-ink);
+}
+
+.library-heading-row .library-heading--toggle[aria-expanded="true"] {
+    background: none;
+}
+
+.library-heading-row .library-heading__chev {
+    order: 0;
+    margin: 0;
+}
+
+.library-heading--toggle[aria-expanded="false"] .library-heading__chev {
+    transform: rotate(-90deg);
+}
+
+.library-heading--toggle[aria-expanded="true"] .library-heading__chev {
+    transform: none;
+}
+
+#librarySelectionBody .collapse__inner {
+    padding: 0;
+    border: 0;
+}
+
+.library-note {
+    margin: 0 0 var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border: 1px dashed var(--rule-soft);
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+}
+
+.library-note[hidden] {
+    display: none;
+}
+
+/* Newsroom Filter button: same height and border as the search and Refresh */
+.newsroom-filter .newsroom-filter__toggle {
+    box-sizing: border-box;
+    height: 36px;
+    margin: 0;
+    border-color: var(--rule);
+    border-bottom: 1px solid var(--rule);
+}
+
+.filter-pop__panel--right {
+    right: 0;
+    left: auto;
+    min-width: 320px;
+}
+
+.filter-pop__note {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+}
+
+.filter-pop__note {
+    padding: var(--space-3) var(--space-4) 0;
+}
+
+/* Sources: two inline tabs, in the site's tab style */
+.source-tabs {
+    display: flex;
+    gap: var(--space-6);
+    margin-bottom: var(--space-4);
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.source-tabs__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: -1px;
+    padding: 0 0 10px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: var(--ink-muted);
+    font-family: inherit;
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: color var(--motion), border-color var(--motion);
+}
+
+.source-tabs__tab:hover {
+    color: var(--ink);
+}
+
+.source-tabs__tab[aria-selected="true"] {
+    border-bottom-color: var(--ink-soft);
+    color: var(--ink);
+}
+
+.source-tabs__count {
+    min-width: 22px;
+    padding: 0 6px;
+    border: 1px solid var(--rule-soft);
+    border-radius: 999px;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-align: center;
+    color: var(--ink-muted);
+}
+
+.source-tabs__count:empty {
+    display: none;
+}
+
+/* Bias: just the word, in its colour (no box) */
+.bias-tag {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: var(--text-sm);
+}
+
+.bias-tag--low { color: #2f7a4f; }
+.bias-tag--medium { color: #9a6b00; }
+.bias-tag--high { color: #b3402f; }
+.bias-tag--unrated { color: var(--ink-muted); }
+
+body.dark .bias-tag--low { color: #7fcf9f; }
+body.dark .bias-tag--medium { color: #f0cf6a; }
+body.dark .bias-tag--high { color: #ef8f80; }
+
+/* Cards: the rating sits right after its label */
+.src-card__facts {
+    grid-template-columns: max-content max-content;
+    column-gap: var(--space-2);
+}
+
+/* Sidebar wide enough for its content */
+:root {
+    --sidebar-width: 236px;
+}
+
+/* 30px more under the main title */
+.header {
+    padding-bottom: calc(var(--space-6) + 30px);
+}
+
+/* Search buttons: a magnifying glass, no fill (everywhere) */
+.search__go--icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    padding: 0;
+    border-left: 1px solid var(--rule-soft);
+    background: transparent;
+    color: var(--ink-soft);
+    transition: color var(--motion), background var(--motion);
+}
+
+.search__go--icon:hover {
+    background: var(--glass-strong);
+    color: var(--ink);
+}
+
+.search__go--icon svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+}
+
+.newsroom-bar .search__go--icon {
+    border-left-color: var(--rule);
+}
+
+/* Newsroom: search, Filter and Refresh as one joined bar */
+.newsroom-bar {
+    gap: 0;
+}
+
+.newsroom-bar > .newsroom-filter,
+.newsroom-bar > .summary-bar__button {
+    margin-left: -1px;
+}
+
+.newsroom-bar .newsroom-filter__toggle,
+.newsroom-bar .summary-bar__button {
+    border-radius: 0;
+}
+
+/* Refresh in the same type as Filter */
+.newsroom-bar .summary-bar__button {
+    padding: 0 var(--space-4);
+    background: var(--glass-strong);
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+}
+
+.newsroom-bar .summary-bar__button:hover {
+    color: var(--ink);
+}
+
+/* Sources list view: a plain, shorter header */
+.src-table__table thead th {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    background: transparent;
+}
+
+/* ==============================================
+   HEADER on every page: the site tabs in their own row, top right (same place
+   on the feed and in Settings). On the feed the title sits under them, where
+   Settings has its heading, then a line, as under Settings' tabs.
+   ============================================== */
+
+.header {
+    padding-bottom: 0;
+}
+
+.header__inner {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
+}
+
+.header__inner .site-tabs {
+    order: 0;
+    align-self: flex-end;
+    margin-left: 0;
+    padding: 0;
+}
+
+.header__inner .title-block {
+    order: 1;
+    margin-top: var(--space-6);            /* Settings' page padding, less its "Back to your feed" */
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.content__inner {
+    padding-top: var(--space-6);
+}
+
+/* Settings: more room between the description and its tabs */
+.settings-page .settings-head {
+    margin-bottom: var(--space-7);
+}
+
+@media (max-width: 760px) {
+    .header__inner .site-tabs {
+        align-self: stretch;
+    }
+}
+
+/* Sidebar 20px wider */
+:root {
+    --sidebar-width: 256px;
+}
+
+/* "See all +" row under the last source */
+.row-item--see-all {
+    border-style: dashed;
+    background: transparent;
+}
+
+.row-item--see-all .row-item__name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--ink-soft);
+}
+
+.row-item--see-all:hover .row-item__name {
+    color: var(--ink);
+}
+
+.row-item__plus {
+    padding-right: 6px;
+    font-size: var(--text-md);
+    line-height: 1;
+}
+
+/* The feed's title and line sit exactly where Settings has its heading and
+   the line under its tabs (Settings adds "Back to your feed" above and its
+   description and tabs below; the feed keeps that space) */
+.title {
+    line-height: 1.05;
+}
+
+.header__inner .title-block {
+    margin-top: 74px;
+    padding-bottom: 113px;
+}
+
+/* When the sidebar has to scroll: a thin scrollbar, and headings that don't
+   reach past the edge (so nothing on the right gets clipped) */
+.sidebar--scroll {
+    overflow-x: hidden;
+    scrollbar-width: thin;
+}
+
+.sidebar--scroll .sidebar-fold .sidebar__label,
+.sidebar--scroll .sidebar-metric .sidebar__label {
+    margin-right: 0;
+    padding-right: 2px;
+}
+
+/* Sidebar section headings: the count while folded, "+" (to Settings) while open */
+.sidebar__plus {
+    display: none;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--rule-soft);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: var(--text-md);
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--motion), border-color var(--motion), color var(--motion);
+}
+
+.sidebar__plus:hover {
+    border-color: var(--rule);
+    background: var(--glass-strong);
+    color: var(--ink);
+}
+
+.sidebar-fold.is-open .sidebar__plus {
+    display: grid;
+}
+
+.sidebar-fold.is-open .sidebar__count {
+    display: none;
+}
+
+/* With its description, the title block keeps the line where Settings has it */
+.header__inner .title-block {
+    padding-bottom: 83px;
+}
+
+.title-block__sub {
+    margin: var(--space-2) 0 0;
+}
+
+/* The line under the feed's title matches Settings (now without its description) */
+.header__inner .title-block {
+    padding-bottom: 54px;
+}
+
+/* NEWSROOM starts level with the page title */
+.sidebar-nav {
+    margin-top: 16px;
+}
+
+/* Settings' section list: a line down its right side */
+.settings-page .settings-nav {
+    padding-right: var(--space-4);
+    border-right: 1px solid var(--rule-soft);
+}
+
+@media (max-width: 860px) {
+    .settings-page .settings-nav {
+        padding-right: 0;
+        border-right: 0;
+    }
+}
+
+/* Sidebar: keep room for a scrollbar at all times, so opening a section never
+   shifts or reshapes anything; headings as before when it scrolls */
+.sidebar {
+    scrollbar-gutter: stable;
+}
+
+.sidebar--scroll .sidebar-fold .sidebar__label,
+.sidebar--scroll .sidebar-metric .sidebar__label {
+    margin-right: -8px;
+}
+
+/* Section headings: text set in from the left, counts / switches in from the right */
+.sidebar-fold .sidebar__label,
+.sidebar-metric .sidebar__label,
+.sidebar--scroll .sidebar-fold .sidebar__label,
+.sidebar--scroll .sidebar-metric .sidebar__label {
+    padding: 0 16px 0 14px;
+}
+
+/* Titles and content 30px higher (the feed and Settings stay aligned) */
+.header__inner .title-block {
+    margin-top: 44px;
+}
+
+.settings-page {
+    padding-top: 2px;
+}
+
+/* NEWSROOM stays level with the title */
+.sidebar__brand {
+    margin-bottom: var(--space-4);
+}
+
+.sidebar-nav {
+    margin-top: 0;
+}
+
+.sidebar-nav {
+    margin-top: 2px;
+}
+
+/* ==============================================
+   Source tables: a slightly darker outline (and header underline), a header
+   barely tinted, and "Show more" / "See all" underneath
+   ============================================== */
+
+.src-table {
+    border-color: var(--rule);
+}
+
+.src-table__table thead th {
+    border-bottom: 1px solid var(--rule);
+    background: rgba(40, 60, 90, 0.035);
+}
+
+body.dark .src-table__table thead th {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Your sources: a row you've unticked (will be removed) */
+.src-table__table tbody tr.is-removing {
+    background: rgba(192, 57, 43, 0.04);
+}
+
+.show-more {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding-top: var(--space-3);
+}
+
+.show-more__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    gap: 6px;
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color var(--motion);
+}
+
+.show-more__btn:hover {
+    color: var(--ink);
+}
+
+.show-more__btn[hidden],
+.show-more__all[hidden] {
+    display: none;
+}
+
+.show-more__chev {
+    font-size: var(--text-md);
+    line-height: 1;
+}
+
+.show-more__count {
+    grid-column: 2;
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+}
+
+.show-more__all {
+    grid-column: 3;
+    justify-self: end;
+    font-size: var(--text-sm);
+}
+
+/* Tabs sit above the Sources box */
+#settingsSourcesSection .source-tabs {
+    margin-bottom: var(--space-3);
+}
+
+/* "See all" popup: wide, the table as tall as it needs (the popup scrolls) */
+.modal__panel--table {
+    max-width: 1080px;
+    width: 100%;
+}
+
+.table-modal__title {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xl);
+    font-weight: 500;
+}
+
+.table-modal__note {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+}
+
+.table-modal__note:empty {
+    display: none;
+}
+
+.table-modal__foot {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-4);
+}
+
+/* Bias / Mood in Settings: the slider centred in its box, with clear labels;
+   thicker once switched on */
+.spectrum {
+    justify-content: center;
+    padding: var(--space-4) var(--space-5);
+}
+
+.spectrum .stepper--large {
+    width: min(560px, 100%);
+    margin: 0 auto;
+}
+
+.stepper--large .stepper__labels button {
+    font-size: var(--text-md);
+    color: var(--ink-soft);
+}
+
+.stepper--large .stepper__labels button[aria-pressed="true"] {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.spectrum--on .stepper--large .stepper__range {
+    height: 30px;
+}
+
+.spectrum--on .stepper--large .stepper__range::-webkit-slider-runnable-track {
+    height: 10px;
+    border-radius: 5px;
+}
+
+.spectrum--on .stepper--large .stepper__range::-moz-range-track {
+    height: 10px;
+    border-radius: 5px;
+}
+
+.spectrum--on .stepper--large .stepper__range::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+    margin-top: -7px;
+}
+
+/* Sources: no box around the tables */
+#settingsSourcesSection > .panel-box {
+    padding: 0;
+    border: 0;
+    background: none;
+}
+
+/* Source tables: the row count sits at the right of the header */
+.src-table__table .c-act {
+    width: 84px;
+}
+
+.src-table__count {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-muted);
+    white-space: nowrap;
+}
+
+/* "⌄ Show 5 more": a last row, centred, with "See all" at its right */
+.src-table__table tbody tr.src-table__more {
+    cursor: default;
+}
+
+.src-table__table tbody tr.src-table__more:hover {
+    background: none;
+}
+
+.src-table__table tr.src-table__more td {
+    position: relative;
+    height: 44px;
+    padding: 0;
+    text-align: center !important;
+}
+
+.src-table__more-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 16px;
+    border: 0;
+    background: none;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.1;
+    cursor: pointer;
+    transition: color var(--motion);
+}
+
+.src-table__more-btn:hover {
+    color: var(--ink);
+}
+
+.src-table__more-btn .show-more__chev {
+    order: 2;
+}
+
+.src-table__see-all {
+    position: absolute;
+    top: 50%;
+    right: var(--space-4);
+    font-size: var(--text-sm);
+    transform: translateY(-50%);
+}
+
+/* Clear all / Reset / Add more right under the table */
+#settingsSourcesSection .feed-actions {
+    margin-top: var(--space-2);
+}
+
+/* A little room above the Sources tabs */
+#settingsSourcesSection .source-tabs {
+    margin-top: var(--space-4);
+}
+
+/* ==============================================
+   The Spectrum: a heading over Bias and Mood (now subheadings), no boxes
+   around the sliders, a line above Bias
+   ============================================== */
+
+.spectrum-head {
+    padding-bottom: 0;
+}
+
+.spectrum-head .panel-title {
+    margin-bottom: 0;
+}
+
+.panel-title--sub {
+    font-size: var(--text-lg);
+    font-weight: 500;
+}
+
+#settingsBiasSection {
+    margin-top: var(--space-4);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--rule-soft);
+}
+
+.panel-section--sub .metric-body {
+    padding: var(--space-3) 0 0;
+}
+
+/* The line right of Settings' section list runs down the page, stopping
+   about 30px short of the end */
+.settings-layout {
+    position: relative;
+}
+
+.settings-page .settings-nav {
+    border-right: 0;
+}
+
+.settings-layout::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 30px;
+    left: 220px;
+    width: 1px;
+    background: var(--rule-soft);
+}
+
+@media (max-width: 860px) {
+    .settings-layout::before {
+        display: none;
+    }
+}
+
+/* ==============================================
+   Source tables: roomier and evenly spaced; a taller header whose labels are
+   a size above the rows; a footer band holding Clear all · Reset · Add more
+   ============================================== */
+
+.src-table__table .c-check { width: 68px; }
+.src-table__table .c-outlet { width: 29%; }
+.src-table__table .c-bias { width: 13%; }
+.src-table__table .c-cred { width: 16%; }
+.src-table__table .c-country { width: 18%; }
+.src-table__table .c-pin { width: 92px; }
+.src-table__table .c-act { width: 96px; }
+
+.src-table__table th,
+.src-table__table td {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+}
+
+.src-table__table th:first-child,
+.src-table__table td:first-child {
+    padding-left: var(--space-6);
+}
+
+.src-table__table th:last-child,
+.src-table__table td:last-child {
+    padding-right: var(--space-6);
+}
+
+.src-table__table thead th {
+    height: 52px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: var(--text-sm);
+    letter-spacing: 0.06em;
+}
+
+.src-table__table tbody td {
+    font-size: var(--text-sm);
+}
+
+.src-table__table .src-table__name {
+    font-size: 0.82rem;
+    font-size: var(--text-sm);
+}
+
+.src-table__count {
+    font-size: var(--text-xs);
+}
+
+/* Grid: the same room inside the box */
+.src-grid {
+    padding: var(--space-5);
+    gap: var(--space-4);
+}
+
+/* The footer band under the table or grid */
+#settingsSourcesSection .feed-actions {
+    margin-top: -1px;
+    padding: 12px var(--space-6);
+    border: 1px solid var(--rule);
+    background: rgba(40, 60, 90, 0.035);
+}
+
+body.dark #settingsSourcesSection .feed-actions {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+#settingsSourcesSection .feed-actions .add-link {
+    font-size: var(--text-sm);
+}
+
+/* ==============================================
+   SOURCES BOX: one container per tab (search bar, table or grid, footer),
+   on a slightly deeper tint; rows and footer share the table's light fill
+   ============================================== */
+
+.src-box {
+    border: 1px solid var(--rule);
+    background: rgba(52, 72, 102, 0.07);
+}
+
+body.dark .src-box {
+    background: rgba(0, 0, 0, 0.22);
+}
+
+.src-box__bar {
+    margin: 0;
+    padding: 12px var(--space-5);
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+/* The table and grid sit edge to edge inside the box */
+.src-box .src-table,
+.src-box .src-grid-wrap {
+    border: 0;
+    background: var(--paper-raised);
+}
+
+body.dark .src-box .src-table,
+body.dark .src-box .src-grid-wrap {
+    background: var(--glass-strong);
+}
+
+.src-box .src-grid-wrap {
+    background: transparent;
+}
+
+.src-box .src-card {
+    background: var(--paper-raised);
+}
+
+.src-box #feedSources .add-slot {
+    margin: var(--space-5);
+    width: auto;
+}
+
+.src-box .bulk-bar {
+    margin: 0;
+    border-width: 0 0 1px;
+}
+
+.src-box .library-note {
+    margin: var(--space-4) var(--space-5);
+}
+
+/* One footer for every table: no taller than a row, the table's fill */
+#settingsSourcesSection .src-box__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 48px;
+    margin: 0;
+    padding: 6px var(--space-6);
+    border: 0;
+    border-top: 1px solid var(--rule-soft);
+    background: var(--paper-raised);
+}
+
+body.dark #settingsSourcesSection .src-box__foot {
+    background: var(--glass-strong);
+}
+
+.src-box__foot .btn {
+    padding: 6px 14px;
+}
+
+.src-box__action span {
+    font-size: var(--text-md);
+    line-height: 1;
+}
+
+.library__foot-actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.library__foot-count {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+}
+
+.library__foot .btn--primary:disabled {
+    border-color: var(--slate-300);
+    background: var(--slate-300);
+    color: #fff;
+}
+
+/* "Show 8 more": a row like the others, the words underlined, a light blue tint on hover */
+.src-table__table tr.src-table__more td {
+    height: 58px;
+    padding: 0;
+}
+
+.src-table__table tbody tr.src-table__more {
+    cursor: pointer;
+    transition: background var(--motion);
+}
+
+.src-table__table tbody tr.src-table__more:hover {
+    background: rgba(47, 111, 237, 0.07);
+}
+
+.src-table__more-btn {
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.src-table__more-btn > :not(.show-more__chev),
+.src-table__more-btn {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.src-table__more-btn .show-more__chev {
+    order: 0;
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* Grid cards: the name sits level with the bottom of the icon; a line in place of topic tags */
+.src-card__head {
+    align-items: flex-end;
+}
+
+.src-card__titles {
+    padding-bottom: 2px;
+}
+
+.src-card__rule {
+    width: 100%;
+    height: 0;
+    margin: var(--space-1) 0 0;
+    border: 0;
+    border-top: 1px solid var(--rule-soft);
+}
+
+.src-card {
+    min-height: 0;
+}
+
+/* Topic tiles: larger names; selected ones a lighter blue with a soft shadow */
+.topic-card__name {
+    font-size: var(--text-lg);
+}
+
+.topic-card[aria-pressed="true"],
+body.dark .topic-card[aria-pressed="true"] {
+    border-color: rgba(47, 111, 237, 0.30);
+    background: rgba(47, 111, 237, 0.05);
+    box-shadow: 0 2px 8px rgba(47, 111, 237, 0.14);
+}
+
+.topic-card[aria-pressed="true"] .topic-card__icon {
+    background: rgba(47, 111, 237, 0.12);
+    color: var(--action);
+}
+
+body.dark .topic-card[aria-pressed="true"] {
+    border-color: rgba(143, 180, 255, 0.35);
+    background: rgba(143, 180, 255, 0.07);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Configure: one section at a time */
+.settings-page .panel-section[hidden] {
+    display: none;
+}
+
+.settings-group[data-group="preferences"] > .panel-section:not([hidden]) {
+    padding-top: 0;
+}
+
+/* A line under each section title */
+.settings-page .panel-section > .panel-title,
+.settings-page .panel-section > .panel-section__head {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.spectrum-head .panel-title {
+    margin-bottom: 0;
+}
+
+/* Bias and Mood: bigger subheadings, a line between them */
+.panel-title--sub {
+    font-size: 1.35rem;
+}
+
+#settingsBiasSection {
+    margin-top: var(--space-5);
+    padding-top: 0;
+    border-top: 0;
+}
+
+#settingsMoodSection {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--rule);
+}
+
+/* "See all": a small button, capitals, no underline */
+.src-table__see-all {
+    padding: 4px 10px;
+    border: 1px solid var(--rule-soft);
+    border-radius: var(--radius-btn);
+    background: var(--glass-strong);
+    color: var(--ink-soft);
+    font-size: var(--text-2xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.src-table__see-all:hover {
+    border-color: var(--rule);
+    background: var(--paper-raised);
+    color: var(--ink);
+    text-decoration: none;
+}
+
+/* Grid: a lighter field, cards lifted with a soft shadow */
+.src-box #feedSources .src-grid-wrap,
+.src-box .src-grid-wrap {
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.src-box .src-card {
+    border-color: var(--rule-soft);
+    box-shadow: 0 2px 10px rgba(30, 45, 70, 0.08);
+}
+
+.src-box .src-card:hover {
+    box-shadow: 0 4px 16px rgba(30, 45, 70, 0.14);
+}
+
+body.dark .src-box .src-grid-wrap {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Sources: a slightly darker outline */
+.src-box {
+    border-color: #6f7c8c;
+}
+
+body.dark .src-box {
+    border-color: #5a6572;
+}
+
+/* "See all": opens near the table, its content at 80% of the popup */
+#tableModal {
+    align-items: flex-start;
+}
+
+#tableModal .modal__panel {
+    max-height: calc(100vh - 48px);
+}
+
+#tableModal .table-modal__title,
+#tableModal .table-modal__note,
+#tableModalBody,
+#tableModal .table-modal__foot {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 760px) {
+    #tableModal .table-modal__title,
+    #tableModal .table-modal__note,
+    #tableModalBody,
+    #tableModal .table-modal__foot {
+        width: 100%;
+    }
+}
+
+@media (min-width: 761px) {
+    #tableModal {
+        justify-content: flex-start;
+    }
+
+    #tableModal .modal__panel {
+        max-width: none;
+        max-height: calc(100vh - 24px - var(--panel-top, 0px));
+    }
+}
+
+/* Page footer: the same height as the sidebar's Settings button */
+.site-footer {
+    box-sizing: border-box;
+    min-height: 56px;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Topic tiles: a quieter, greyer highlight */
+.topic-card[aria-pressed="true"],
+body.dark .topic-card[aria-pressed="true"] {
+    border-color: rgba(70, 90, 120, 0.28);
+    background: rgba(90, 105, 130, 0.08);
+    box-shadow: 0 1px 5px rgba(40, 55, 80, 0.10);
+}
+
+.topic-card[aria-pressed="true"] .topic-card__icon {
+    background: rgba(90, 105, 130, 0.14);
+    color: var(--ink-soft);
+}
+
+body.dark .topic-card[aria-pressed="true"] {
+    border-color: rgba(200, 210, 225, 0.25);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.row-item__count {
+    padding-right: 6px;
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+}
+
+/* Selected topic tiles: dimmer border, fill and a very small shadow */
+.topic-card[aria-pressed="true"],
+body.dark .topic-card[aria-pressed="true"] {
+    border-color: rgba(70, 90, 120, 0.18);
+    background: rgba(90, 105, 130, 0.05);
+    box-shadow: 0 1px 2px rgba(40, 55, 80, 0.06);
+}
+
+.topic-card[aria-pressed="true"] .topic-card__icon {
+    background: rgba(90, 105, 130, 0.10);
+}
+
+/* "See hidden": joined to the search bar like Filter and Refresh */
+.newsroom-bar .newsroom-hidden {
+    box-sizing: border-box;
+    height: 36px;
+    margin: 0 0 0 -1px;
+    border-color: var(--rule);
+    border-radius: 0;
+    white-space: nowrap;
+}
+
+.newsroom-bar .newsroom-hidden:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Pager: « First ‹ Previous at the left, Next › Last » at the right, pages between */
+.pager {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-7);
+}
+
+.pager__edge {
+    display: flex;
+    gap: 6px;
+}
+
+.pager__numbers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
+
+.pager__summary {
+    grid-column: 1 / -1;
+}
+
+.pager__btn--first,
+.pager__btn--last {
+    margin: 0;
+}
+
+@media (max-width: 640px) {
+    .pager {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .pager__numbers {
+        grid-column: 1 / -1;
+        order: -1;
+    }
+
+    .pager__edge:last-of-type {
+        justify-content: flex-end;
+    }
+}
+
+/* Sidebar "See all": the rows' fill, a firmer solid border */
+.row-item--see-all {
+    border: 1.5px solid var(--rule);
+    background: var(--glass-strong);
+}
+
+.row-item--see-all:hover {
+    border-color: var(--ink-muted);
+    background: var(--paper-raised);
+}
+
+/* Sidebar sources: every icon in the same-width slot, so names all start in line */
+.row-item__source .logo {
+    width: 24px;
+    max-width: 24px;
+    flex: none;
+    justify-content: center;
+}
+
+.row-item__source .logo img {
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* One line across the content just under the title and its description, in
+   the same place on the feed and in Settings (none above the news itself) */
+.header__inner .title-block {
+    border-bottom: 0;
+    padding-bottom: var(--space-5);
+}
+
+.title-block__sub {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.settings-page .settings-head {
+    padding-bottom: 42px;
+    border-bottom: 1px solid var(--rule-soft);
+    margin-bottom: var(--space-5);
+}
+
+/* NEWSROOM's position is set by alignSidebarNav() */
+.sidebar-nav {
+    margin-top: 0;
+}
+
+/* Selected topics: light blue again, with a faint 1px shadow */
+.topic-card[aria-pressed="true"],
+body.dark .topic-card[aria-pressed="true"] {
+    border-color: rgba(47, 111, 237, 0.28);
+    background: rgba(47, 111, 237, 0.07);
+    box-shadow: 0 1px 1px rgba(47, 111, 237, 0.10);
+}
+
+.topic-card[aria-pressed="true"] .topic-card__icon {
+    background: rgba(47, 111, 237, 0.12);
+    color: var(--action);
+}
+
+/* The page footer stays on the bottom of the screen */
+.site-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+}
+
+/* Grid: a pinned outlet's card gets a thin border in the star's blue */
+.src-box .src-card--pinned {
+    border-color: var(--action-ink);
+}
+
+/* Grid: each rating right after its label ("Bias: Low") */
+.src-card__facts {
+    display: block;
+}
+
+.src-card__facts dt,
+.src-card__facts dd {
+    display: inline;
+}
+
+.src-card__facts dt::after {
+    content: ":";
+}
+
+.src-card__facts dd {
+    margin-left: 6px;
+}
+
+.src-card__facts dd::after {
+    content: "\A";
+    white-space: pre;
+}
+
+.src-card__facts dt:not(:first-child) {
+    display: inline-block;
+    margin-top: 8px;
+}
+
+/* Sidebar: the whole heading row opens its section */
+.sidebar-fold .sidebar__label {
+    cursor: pointer;
+}
+
+/* Redacted's count reads like the others ("4 keywords") */
+#keywordsCount {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    text-align: right;
+}
+
+/* Header tabs: menus fade and slide in, underlines ease */
+.site-tabs .nav-menu__tab {
+    transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.site-tabs .nav-menu__chev {
+    transition: transform 0.25s ease;
+}
+
+.site-tabs .nav-menu__panel,
+.site-tabs .nav-menu__panel[hidden] {
+    display: grid;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+    animation: none;
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0.22s;
+}
+
+.site-tabs .nav-menu:hover .nav-menu__panel,
+.site-tabs .nav-menu:focus-within .nav-menu__panel,
+.site-tabs .nav-menu__panel:not([hidden]) {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
+}
+
+/* The saving note: a small card at the bottom right, the page not dimmed */
+.consent--note {
+    left: auto;
+    max-width: 520px;
+}
+
+.consent--note .consent__panel {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+}
+
+.consent--note .consent__text p {
+    margin-top: var(--space-2);
+}
+
+.consent--note .consent__actions {
+    justify-content: flex-end;
+}
+
+/* Newsroom: the search ends where the second column of stories does; the
+   buttons share the third */
+.newsroom-bar__search {
+    flex: 0 0 calc(200% / 3 + 1px);
+}
+
+.newsroom-bar > .newsroom-hidden,
+.newsroom-bar > .newsroom-filter,
+.newsroom-bar > .summary-bar__button {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.newsroom-bar .newsroom-filter__toggle {
+    width: 100%;
+    margin-left: 0;
+}
+
+.newsroom-bar > .summary-bar__button,
+.newsroom-bar .newsroom-hidden {
+    justify-content: center;
+}
+
+@media (max-width: 1100px) {
+    .newsroom-bar__search {
+        flex-basis: calc(50% + 1px);
+    }
+}
+
+@media (max-width: 640px) {
+    .newsroom-bar {
+        flex-wrap: wrap;
+    }
+
+    .newsroom-bar__search {
+        flex-basis: 100%;
+    }
+}

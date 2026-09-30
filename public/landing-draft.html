@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Censored</title>
+    <!-- DRAFT: a landing page to try out the layout. Not linked from the site yet. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Averia+Libre:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/system.css">
+    <style>
+        /* Hover opens a tab's menu (the site does the same) */
+        /* Draft-only layout: no sidebar; tabs across the top, the title, then an introduction */
+        body { min-height: 100vh; }
+
+        .ld-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-5);
+            max-width: var(--content-max);
+            margin: 0 auto;
+            padding: var(--space-4) var(--gutter);
+        }
+
+        .ld-mark {
+            font-family: var(--font-title);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .ld-top .site-tabs {
+            padding-top: 0;
+        }
+
+        .ld-hero {
+            max-width: var(--content-max);
+            margin: 0 auto;
+            padding: var(--space-8) var(--gutter) var(--space-7);
+        }
+
+        .ld-hero .title {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+        }
+
+        .ld-lede {
+            max-width: 620px;
+            margin: var(--space-5) 0 var(--space-6);
+            font-size: var(--text-lg);
+            line-height: 1.6;
+            color: var(--ink-soft);
+        }
+
+        .ld-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-3);
+        }
+
+        .ld-actions .btn {
+            padding: 12px 20px;
+            font-size: 13px;
+        }
+
+        .ld-cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            max-width: var(--content-max);
+            margin: 0 auto var(--space-8);
+            padding: 0 var(--gutter);
+        }
+
+        .ld-card {
+            display: grid;
+            gap: var(--space-2);
+            padding: var(--space-5);
+            border: 1px solid var(--rule);
+            margin-left: -1px;
+            background: var(--glass-soft);
+            color: var(--ink);
+            text-decoration: none;
+            transition: background var(--motion);
+        }
+
+        .ld-card:hover {
+            background: var(--paper-raised);
+        }
+
+        .ld-card strong {
+            font-size: var(--text-lg);
+            font-weight: 600;
+        }
+
+        .ld-card span {
+            font-size: var(--text-sm);
+            line-height: 1.6;
+            color: var(--ink-muted);
+        }
+
+        .ld-card em {
+            margin-top: var(--space-2);
+            font-size: var(--text-2xs);
+            font-style: normal;
+            font-weight: 700;
+            letter-spacing: var(--tracking-caps);
+            text-transform: uppercase;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        @media (max-width: 760px) {
+            .ld-top { flex-wrap: wrap; }
+            .ld-cards { grid-template-columns: minmax(0, 1fr); }
+            .ld-card { margin: -1px 0 0; }
+        }
+    </style>
+</head>
+<body>
+<p class="censor-bar" aria-hidden="true">%*-- #?%*@&amp;!@#$%--?#$%!@#$%!$@#$%!#$%!!@--#$%!#*@&amp;!@&amp;!@#$%#@--!#*@&amp;#$%!!@!@*#$%!#*@#&amp;!@@#$%!@-@#$%!--$%!@%!#&amp;$%!@#$%!$#%*-- #?%*@&amp;!@#$%--?#$%!@#$%!$@#$%!#$%!!@--#$%!#*@&amp;!@&amp;!@#$%#@--!#*@&amp;#$%!!@!@*#$%!#*@#&amp;!@@#$%!@-@#$%!--$%!@%!#&amp;$%!@#$%!$#</p>
+
+<!-- Tabs on every page (same as the newsroom) -->
+<header class="ld-top">
+    <a class="ld-mark" href="landing-draft.html">s*lf</a>
+    <nav class="site-tabs" aria-label="Site">
+        <a class="nav-menu__tab site-tabs__link" href="/">Newsroom</a>
+        <div class="nav-menu">
+            <button class="nav-menu__tab" type="button">Config <span class="nav-menu__chev" aria-hidden="true">⌄</span></button>
+            <div class="nav-menu__panel" hidden>
+                <a href="/#settings/topics">Topics</a>
+                <a href="/#settings/sources">Sources</a>
+                <a href="/#settings/bias">Bias</a>
+                <a href="/#settings/mood">Mood</a>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <button class="nav-menu__tab" type="button">Community <span class="nav-menu__chev" aria-hidden="true">⌄</span></button>
+            <div class="nav-menu__panel" hidden>
+                <a href="https://github.com/sonia-sharapova/Self-Censored" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <button class="nav-menu__tab" type="button">About <span class="nav-menu__chev" aria-hidden="true">⌄</span></button>
+            <div class="nav-menu__panel" hidden><p class="nav-menu__soon">Coming soon.</p></div>
+        </div>
+        <div class="nav-menu">
+            <button class="nav-menu__tab" type="button">Contact <span class="nav-menu__chev" aria-hidden="true">⌄</span></button>
+            <div class="nav-menu__panel" hidden><p class="nav-menu__soon">Coming soon.</p></div>
+        </div>
+        <a class="nav-menu__tab site-tabs__link" href="/#settings">Settings</a>
+    </nav>
+</header>
+
+<!-- The title lives here, on the main page only -->
+<main>
+    <section class="ld-hero">
+        <h1 class="title">Self-Censored</h1>
+        <p class="subtitle">[willful] ignorance is bliss</p>
+        <p class="ld-lede">A news reader that leaves out what you'd rather not see. Pick outlets you trust, redact the words and people you're tired of, and set the tone of your feed.</p>
+        <div class="ld-actions">
+            <a class="btn btn--primary" href="/">Open the newsroom →</a>
+            <a class="btn" href="/#settings">Set up your filters</a>
+        </div>
+    </section>
+
+    <section class="ld-cards" aria-label="What it does">
+        <a class="ld-card" href="/#settings/keywords">
+            <strong>Redact</strong>
+            <span>Hide every story that mentions a word, a person or a pattern: <code>*ai</code>, <code>"Trump"</code>, <code>war</code>.</span>
+            <em>Keywords</em>
+        </a>
+        <a class="ld-card" href="/#settings/sources">
+            <strong>Choose sources</strong>
+            <span>60 outlets, rated for bias and credibility. Keep the ones you trust, pin your favourites.</span>
+            <em>Sources</em>
+        </a>
+        <a class="ld-card" href="/#settings/mood">
+            <strong>Set the tone</strong>
+            <span>Tired of only hearing bad news? Tilt the feed toward the hopeful, or filter by bias.</span>
+            <em>Bias &amp; mood</em>
+        </a>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <span>Self-Censored: if you can't see it, it's not real. (ง•̀o•́)ง</span>
+</footer>
+</body>
+</html>

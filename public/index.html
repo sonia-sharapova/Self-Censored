@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Averia+Libre:wght@700&family=IBM+Plex+Mono:wght@400;600&display=swap">
-    <link rel="stylesheet" href="css/system.css">
-    <link rel="stylesheet" href="css/news.css">
+    <link rel="stylesheet" href="css/system.css?v=202609292146">
+    <link rel="stylesheet" href="css/news.css?v=202609292146">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
 </head>
 <body>
@@ -36,6 +36,7 @@
             <div class="sidebar__label">
                 <button class="sidebar__toggle" type="button" id="topicsLabel" aria-expanded="true" aria-controls="topicsFold" onclick="toggleSidebarSection('topics')"><span class="sidebar__chev" aria-hidden="true">⌄</span><span class="eyebrow">Topics</span></button>
                 <button class="link-btn sidebar__count" id="topicsCount" type="button" onclick="openSettings('topics')" title="Topics in Settings"></button>
+                <button class="sidebar__plus" type="button" onclick="openSettings('topics')" aria-label="Topics in Settings" title="Topics in Settings">+</button>
             </div>
             <div class="collapse is-open" id="topicsFold">
                 <div class="collapse__inner">
@@ -48,6 +49,7 @@
             <div class="sidebar__label">
                 <button class="sidebar__toggle" type="button" id="sourcesLabel" aria-expanded="true" aria-controls="sourcesFold" onclick="toggleSidebarSection('sources')"><span class="sidebar__chev" aria-hidden="true">⌄</span><span class="eyebrow">Sources</span></button>
                 <button class="link-btn sidebar__count" id="sourcesCount" type="button" onclick="openSettings('sources')" title="Open your sources in Settings"></button>
+                <button class="sidebar__plus" type="button" onclick="openSettings('sources')" aria-label="Sources in Settings" title="Sources in Settings">+</button>
             </div>
             <div class="collapse is-open" id="sourcesFold">
                 <div class="collapse__inner">
@@ -60,6 +62,7 @@
             <div class="sidebar__label">
                 <button class="sidebar__toggle" type="button" id="avoidLabel" aria-expanded="true" aria-controls="avoidFold" onclick="toggleSidebarSection('avoid')"><span class="sidebar__chev" aria-hidden="true">⌄</span><span class="eyebrow">Redacted</span></button>
                 <button class="link-btn sidebar__count" id="keywordsCount" type="button" onclick="openSettings('keywords')" title="Keywords in Settings"></button>
+                <button class="sidebar__plus" type="button" onclick="openSettings('keywords')" aria-label="Keywords in Settings" title="Keywords in Settings">+</button>
             </div>
             <div class="collapse is-open" id="avoidFold">
                 <div class="collapse__inner">
@@ -113,10 +116,11 @@
                 <!-- The site title (hidden on Settings), tabs on the right -->
                 <div class="title-block">
                     <h1 class="title">Self-Censored</h1>
+                    <p class="settings-head__sub title-block__sub">Sometimes it's ok to not know.</p>
                 </div>
                 <nav class="site-tabs" aria-label="Site">
                     <div class="nav-menu">
-                        <button class="nav-menu__tab" type="button" aria-haspopup="menu" aria-expanded="false" onclick="toggleNavMenu(event, 'config')">Config <span class="nav-menu__chev" aria-hidden="true">⌄</span></button>
+                        <button class="nav-menu__tab" type="button" aria-haspopup="menu" aria-expanded="false" onclick="toggleNavMenu(event, 'config')">Customize <span class="nav-menu__chev" aria-hidden="true">⌄</span></button>
                         <div class="nav-menu__panel" id="navMenu-config" role="menu" hidden>
                             <button type="button" role="menuitem" onclick="closeNavMenus(); openSettings('topics')">Topics</button>
                             <button type="button" role="menuitem" onclick="closeNavMenus(); openSettings('sources')">Sources</button>
@@ -162,9 +166,17 @@
                                     placeholder="Find articles that mention…"
                                     autocomplete="off"
                             >
-                            <button class="search__go" type="submit">Go</button>
+                            <button class="search__go search__go--icon" type="submit" aria-label="Search" title="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
                         </form>
                         <ul id="keywordsList" class="remove-list remove-list--find search-keywords"></ul>
+                    </div>
+                    <button class="btn toolbar__button newsroom-hidden" id="seeHidden" type="button" onclick="showHiddenArticles()" disabled>See hidden</button>
+                    <div class="filter-pop newsroom-filter">
+                        <button class="btn toolbar__button newsroom-filter__toggle" id="viewFiltersToggle" type="button" aria-expanded="false" aria-controls="viewFilters" onclick="toggleViewFilters(event)">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v6m0 4v6M12 4v2m0 4v10M19 4v10m0 4v2M3 10h4M10 6h4M17 14h4"/></svg>
+                            Filter <span class="badge" id="viewFiltersCount" hidden></span>
+                        </button>
+                        <div class="filter-pop__panel filter-pop__panel--right" id="viewFilters" hidden></div>
                     </div>
                     <button class="summary-bar summary-bar__button" type="button" onclick="loadNews()">
                         Refresh
@@ -174,7 +186,7 @@
 
                 <div id="loading" class="grid-message" style="display: none;">
                     <div class="spinner"></div>
-                    <p>Loading news from… "reliable" sources…</p>
+                    <p>Loading "reliable" sources…</p>
                 </div>
                 <div id="newsContainer" class="ruled-grid"></div>
 
@@ -198,14 +210,13 @@
                     <a class="settings-back" href="#" onclick="closeSettings(event)"><span aria-hidden="true">←</span> Back to your feed</a>
                     <header class="settings-head">
                         <h1 id="settingsTitle" class="settings-head__title">Settings</h1>
-                        <p class="settings-head__sub">Configure your individual preferences for your news feed. Changes apply straight away and save as you go.</p>
                     </header>
 
                     <!-- Tabs across the top; each tab has its own section nav on the left -->
                     <nav class="settings-tabs" aria-label="Settings">
-                        <button class="settings-tabs__tab" type="button" data-group="appearance" onclick="showSettingsGroup('appearance')">Appearance</button>
-                        <button class="settings-tabs__tab" type="button" data-group="preferences" onclick="showSettingsGroup('preferences')">Preferences</button>
+                        <button class="settings-tabs__tab" type="button" data-group="preferences" onclick="showSettingsGroup('preferences')">Configure</button>
                         <button class="settings-tabs__tab" type="button" data-group="advanced" onclick="showSettingsGroup('advanced')">Advanced settings</button>
+                        <button class="settings-tabs__tab" type="button" data-group="appearance" onclick="showSettingsGroup('appearance')">Theme</button>
                         <button class="settings-tabs__tab" type="button" data-group="contact" onclick="showSettingsGroup('contact')">Contact</button>
                     </nav>
 
@@ -253,29 +264,6 @@
 
                             <!-- PREFERENCES -->
                             <div class="settings-group" data-group="preferences">
-                                <section class="panel-section" id="settingsKeywordsSection">
-                                    <h2 class="panel-title">Redacted keywords</h2>
-                                    <ul class="section-hint kw-help">
-                                        <li><code>*</code> extends a word to any ending or beginning: <code>*ai</code> hides both “AI” and “OpenAI”; <code>kill*</code> hides kill, killed and killings.</li>
-                                        <li><code>"quotes"</code> match exactly, capitals included: <code>"Trump"</code> hides Trump but not a trump card.</li>
-                                        <li>A plain word matches that whole word in any case: <code>war</code> hides War and war, not software.</li>
-                                    </ul>
-                                    <div class="panel-box">
-                                        <div class="kw-examples" id="keywordExamples">
-                                            <button class="kw-examples__toggle" type="button" id="keywordExamplesToggle" aria-expanded="true" aria-controls="keywordExamplesBody" onclick="toggleKeywordExamples()"><span class="field-label">Examples</span><span class="kw-examples__chev" aria-hidden="true">⌄</span></button>
-                                            <div class="collapse is-open" id="keywordExamplesBody">
-                                                <div class="collapse__inner"><div id="keywordSuggestions" class="kw-tags"></div></div>
-                                            </div>
-                                        </div>
-                                        <label class="field-label" for="settingsKeywordInput">Keywords</label>
-                                        <form class="search kw-input" onsubmit="addKeywordFromSettings(event)">
-                                            <input class="search__input" id="settingsKeywordInput" type="text" placeholder="Add a word, *pattern or &quot;exact phrase&quot; and press Enter" autocomplete="off">
-                                            <button class="search__go" type="submit">Add</button>
-                                        </form>
-                                        <div id="settingsBlocked" class="kw-tags" aria-label="Redacted keywords"></div>
-                                    </div>
-                                </section>
-
                                 <section class="panel-section" id="settingsTopicsSection">
                                     <h2 class="panel-title">Topics</h2>
                                     <p class="section-hint">Personalize your feed based on topics that interest you:</p>
@@ -287,14 +275,21 @@
                                 <section class="panel-section" id="settingsSourcesSection">
                                     <h2 class="panel-title">Sources</h2>
                                     <p class="section-hint">Select which media outlets you would like to see. Favourite a news outlet with ☆ to have it easily accessible in the sidebar.</p>
+                                    <!-- Two tabs above the box: the outlets in your feed, and the rest to add from -->
+                                    <nav class="source-tabs" role="tablist" aria-label="Sources">
+                                        <button class="source-tabs__tab" type="button" role="tab" id="sourceTabCurrent" aria-selected="true" aria-controls="sourcesMine" onclick="closeSourcePicker()">Your sources <span class="source-tabs__count" id="sourceTabCount"></span></button>
+                                        <button class="source-tabs__tab" type="button" role="tab" id="sourceTabAdd" aria-selected="false" aria-controls="sourcePicker" onclick="openSourcePicker()">Add more</button>
+                                    </nav>
                                     <div class="panel-box">
+
                                         <!-- Your sources: search and tools, then the table or grid, then the footer -->
                                         <div id="sourcesMine">
-                                        <div class="toolbar">
+                                        <div class="src-box">
+                                            <div class="toolbar src-box__bar">
                                             <form class="search toolbar__search toolbar__search--fill" role="search" onsubmit="event.preventDefault(); setSourceQuery(document.getElementById('feedSearch').value, 'feed')">
                                                 <label class="visually-hidden" for="feedSearch">Search your sources</label>
                                                 <input class="search__input" id="feedSearch" type="search" placeholder="Search your sources…" autocomplete="off" oninput="setSourceQuery(this.value, 'feed')">
-                                                <button class="search__go" type="submit">Go</button>
+                                                <button class="search__go search__go--icon" type="submit" aria-label="Search" title="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
                                             </form>
                                             <div class="toolbar__end">
                                                 <input type="file" id="importFile" accept=".json" hidden onchange="importSettings(event)">
@@ -321,13 +316,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="feedSources"></div>
-                                        <div class="feed-actions" id="feedActions">
-                                            <span class="feed-actions__links">
-                                                <button class="link-btn link-btn--danger" type="button" onclick="askSourcesChange('clear')">Clear all</button>
-                                                <button class="link-btn" type="button" onclick="askSourcesChange('reset')">Reset</button>
-                                            </span>
-                                            <button class="add-link" type="button" onclick="openSourcePicker()">Explore full library <span aria-hidden="true">→</span></button>
+                                            <div id="feedSources"></div>
+                                            <div class="feed-actions src-box__foot" id="feedActions">
+                                                <span class="feed-actions__links">
+                                                    <button class="link-btn link-btn--danger" type="button" onclick="askSourcesChange('clear')">Clear all</button>
+                                                    <button class="link-btn" type="button" onclick="askSourcesChange('reset')">Reset</button>
+                                                </span>
+                                                <button class="btn src-box__action" type="button" onclick="openSourcePicker()">Add more <span aria-hidden="true">+</span></button>
+                                            </div>
                                         </div>
                                         <!-- "Are you sure?": nothing changes until Save -->
                                         <div class="confirm-bar" id="sourcesConfirm" role="alertdialog" aria-live="polite" hidden>
@@ -339,62 +335,70 @@
                                         </div>
                                         </div>
 
-                                        <!-- The full library, in place of your sources (Cancel or "N sources →" returns) -->
+                                        <!-- "Add more": every outlet not in your feed -->
                                         <div id="sourcePicker" class="library" hidden>
-                                            <div class="library__head">
-                                                <button class="settings-back" type="button" onclick="closeSourcePicker()"><span aria-hidden="true">←</span> Your sources</button>
-                                                <h3 class="library__title">Full library</h3>
-                                            </div>
-
-                                            <h4 class="library-heading">Available news outlets</h4>
-                                            <div class="toolbar">
-                                                <form class="search toolbar__search toolbar__search--fill" role="search" onsubmit="event.preventDefault(); setSourceQuery(document.getElementById('sourceSearch').value, 'picker')">
-                                                    <label class="visually-hidden" for="sourceSearch">Search outlets</label>
-                                                    <input class="search__input" id="sourceSearch" type="search" placeholder="Search outlets, owners, aliases…" autocomplete="off" oninput="setSourceQuery(this.value, 'picker')">
-                                                    <button class="search__go" type="submit">Go</button>
-                                                </form>
-                                                <div class="filter-pop">
-                    <button class="btn toolbar__button" id="sourceFiltersToggle" type="button" aria-expanded="false" aria-controls="sourceFilters" onclick="toggleSourceFilters(event, 'picker')">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v6m0 4v6M12 4v2m0 4v10M19 4v10m0 4v2M3 10h4M10 6h4M17 14h4"/></svg>
-                        Filters <span class="badge" id="sourceFiltersCount" hidden></span>
-                    </button>
-                    <div class="filter-pop__panel" id="sourceFilters" hidden></div>
-                </div>
-                                            </div>
+                                            <p class="library-note" id="libraryAllPresent" hidden>All sources present: every outlet is already in your feed.</p>
+                                            <div class="src-box">
+                                            <div class="toolbar src-box__bar">
+                                            <form class="search toolbar__search toolbar__search--fill" role="search" onsubmit="event.preventDefault(); setSourceQuery(document.getElementById('sourceSearch').value, 'picker')">
+                                                <label class="visually-hidden" for="sourceSearch">Search outlets</label>
+                                                <input class="search__input" id="sourceSearch" type="search" placeholder="Search outlets, owners, aliases…" autocomplete="off" oninput="setSourceQuery(this.value, 'picker')">
+                                                <button class="search__go search__go--icon" type="submit" aria-label="Search" title="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
+                                            </form>
+                                            <div class="filter-pop">
+                <button class="btn toolbar__button" id="sourceFiltersToggle" type="button" aria-expanded="false" aria-controls="sourceFilters" onclick="toggleSourceFilters(event, 'picker')">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v6m0 4v6M12 4v2m0 4v10M19 4v10m0 4v2M3 10h4M10 6h4M17 14h4"/></svg>
+                    Filters <span class="badge" id="sourceFiltersCount" hidden></span>
+                </button>
+                <div class="filter-pop__panel" id="sourceFilters" hidden></div>
+            </div>
+                                        </div>
                                             <div id="settingsSources"></div>
+                                            <div class="src-box__foot library__foot">
+                                                <span class="feed-actions__links" id="pickerSummary"></span>
+                                                <span class="library__foot-actions">
+                                                    <button class="btn" type="button" onclick="closeSourcePicker()">Cancel</button>
+                                                    <button class="btn btn--primary" type="button" id="pickerConfirm" onclick="confirmSourcePicker()" disabled>Add</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
 
-                                            <!-- Your current selection: a drop-down; "N sources →" returns to your table -->
-                                            <div class="library-heading-row">
-                                                <button class="library-heading library-heading--toggle" type="button" id="librarySelectionToggle" aria-expanded="false" aria-controls="librarySelectionBody" onclick="toggleLibrarySelection()">
-                                                    <span class="library-heading__chev" aria-hidden="true">⌄</span>
-                                                    <span>Current media selection</span>
-                                                </button>
-                                                <button class="library-back" type="button" id="librarySelectionBack" onclick="closeSourcePicker()" title="Back to your Sources table (unapplied changes are dropped)"></button>
-                                            </div>
-                                            <div class="collapse" id="librarySelectionBody">
-                                                <div class="collapse__inner">
-                                                    <div class="toolbar">
-                                                        <form class="search toolbar__search toolbar__search--fill" role="search" onsubmit="event.preventDefault(); setSourceQuery(document.getElementById('selectionSearch').value, 'selection')">
-                                                            <label class="visually-hidden" for="selectionSearch">Search your selection</label>
-                                                            <input class="search__input" id="selectionSearch" type="search" placeholder="Search your selection…" autocomplete="off" oninput="setSourceQuery(this.value, 'selection')">
-                                                            <button class="search__go" type="submit">Go</button>
-                                                        </form>
-                                                    </div>
-                                                    <div id="librarySelection"></div>
-                                                </div>
-                                            </div>
-
-                                            <div class="library__foot">
-                                                <button class="btn" type="button" onclick="closeSourcePicker()">Cancel</button>
-                                                <button class="btn btn--primary" type="button" id="pickerConfirm" onclick="confirmSourcePicker()" disabled>Add</button>
-                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </section>
 
-                                <section class="panel-section" id="settingsBiasSection">
+                                <section class="panel-section" id="settingsKeywordsSection">
+                                    <h2 class="panel-title">Redacted keywords</h2>
+                                    <ul class="section-hint kw-help">
+                                        <li><code>*</code> extends a word to any ending or beginning: <code>*AI</code> hides both “AI” and “OpenAI”; <code>kill*</code> hides kill, killed and killings.</li>
+                                        <li><code>"quotes"</code> match exactly, capitals included: <code>"Trump"</code> hides Trump but not a trump card.</li>
+                                        <li>A plain word matches that whole word in any case: <code>war</code> hides War and war, not software.</li>
+                                    </ul>
+                                    <div class="panel-box">
+                                        <div class="kw-examples" id="keywordExamples">
+                                            <button class="kw-examples__toggle" type="button" id="keywordExamplesToggle" aria-expanded="true" aria-controls="keywordExamplesBody" onclick="toggleKeywordExamples()"><span class="field-label">Examples</span><span class="kw-examples__chev" aria-hidden="true">⌄</span></button>
+                                            <div class="collapse is-open" id="keywordExamplesBody">
+                                                <div class="collapse__inner"><div id="keywordSuggestions" class="kw-tags"></div></div>
+                                            </div>
+                                        </div>
+                                        <label class="field-label" for="settingsKeywordInput">Keywords</label>
+                                        <form class="search kw-input" onsubmit="addKeywordFromSettings(event)">
+                                            <input class="search__input" id="settingsKeywordInput" type="text" placeholder="Add a word, *pattern or &quot;exact phrase&quot; and press Enter" autocomplete="off">
+                                            <button class="search__go" type="submit">Add</button>
+                                        </form>
+                                        <div id="settingsBlocked" class="kw-tags" aria-label="Redacted keywords"></div>
+                                    </div>
+                                </section>
+
+                                <section class="panel-section spectrum-head" id="settingsSpectrumSection">
+                                    <h2 class="panel-title">The Spectrum</h2>
+                                </section>
+
+                                <section class="panel-section panel-section--sub" id="settingsBiasSection">
                                     <div class="panel-section__head">
-                                        <h2 class="panel-title">Bias</h2>
+                                        <h3 class="panel-title panel-title--sub">Bias</h3>
                                         <label class="switch"><input type="checkbox" id="useBias" onchange="setMetricEnabled('biasLevels', this.checked)"><span class="switch__track" aria-hidden="true"></span> Filter by bias</label>
                                     </div>
                                     <div class="section-hint">
@@ -405,23 +409,19 @@
                                                 <li><strong>High</strong> leans left or right</li>
                                             </ul>
                                     </div>
-                                    <div class="panel-box">
-                                        <div class="metric-body" id="settingsBiasBody">
-                                            <div id="settingsBias" class="stepper-slot stepper-slot--wide"></div>
-                                        </div>
+                                    <div class="metric-body" id="settingsBiasBody">
+                                        <div id="settingsBias" class="stepper-slot stepper-slot--wide"></div>
                                     </div>
                                 </section>
 
-                                <section class="panel-section" id="settingsMoodSection">
+                                <section class="panel-section panel-section--sub" id="settingsMoodSection">
                                     <div class="panel-section__head">
-                                        <h2 class="panel-title">Mood</h2>
+                                        <h3 class="panel-title panel-title--sub">Mood</h3>
                                         <label class="switch"><input type="checkbox" id="useMood" onchange="setMetricEnabled('moods', this.checked)"><span class="switch__track" aria-hidden="true"></span> Filter by mood</label>
                                     </div>
                                     <p class="section-hint">Tired of only hearing bad news? Set your desired tone to influence the articles displayed.</p>
-                                    <div class="panel-box">
-                                        <div class="metric-body" id="settingsMoodBody">
-                                            <div id="settingsMood" class="stepper-slot stepper-slot--wide"></div>
-                                        </div>
+                                    <div class="metric-body" id="settingsMoodBody">
+                                        <div id="settingsMood" class="stepper-slot stepper-slot--wide"></div>
                                     </div>
                                 </section>
                             </div>
@@ -461,7 +461,7 @@
 
                                 <section class="panel-section" id="settingsDataSection">
                                     <h2 class="panel-title">Your data</h2>
-                                    <p class="section-hint">Self-Censored uses no cookies. It can remember your settings in this browser's local storage, but only if you allow it. Either way, you can export your configuration as a file and import it later (or on another device).</p>
+                                    <p class="section-hint">Self-Censored uses no cookies. It remembers your settings in this browser's local storage (on by default; nothing is sent anywhere). Either way, you can export your configuration as a file and import it later (or on another device).</p>
                                     <div class="panel-box">
                                         <div class="setting-list">
                                             <div class="setting-row">
@@ -500,14 +500,6 @@
                                     <p class="section-hint">Self-Censored is a small side project. Found a bug, want an outlet added, or have an idea? Get in touch.</p>
                                     <div class="panel-box">
                                         <div class="contact-cards">
-                                            <a class="contact-card" href="https://github.com/sonia-sharapova/Self-Censored/issues/new?title=Suggest%20a%20source%3A%20" target="_blank" rel="noopener noreferrer">
-                                                <strong>Suggest a source</strong>
-                                                <span>Name the outlet and, if it has one, its RSS feed.</span>
-                                            </a>
-                                            <a class="contact-card" href="https://github.com/sonia-sharapova/Self-Censored/issues/new?title=Problem%3A%20" target="_blank" rel="noopener noreferrer">
-                                                <strong>Report a problem</strong>
-                                                <span>A broken feed, a wrong rating, or anything that looks off.</span>
-                                            </a>
                                             <a class="contact-card" href="https://github.com/sonia-sharapova/Self-Censored" target="_blank" rel="noopener noreferrer">
                                                 <strong>Source code</strong>
                                                 <span>The project on GitHub.</span>
@@ -515,6 +507,14 @@
                                             <a class="contact-card" href="https://soniapolis.com" target="_blank" rel="noopener noreferrer">
                                                 <strong>soniapolis.com</strong>
                                                 <span>Made by Sonia. More projects there.</span>
+                                            </a>
+                                            <a class="contact-card" href="https://github.com/sonia-sharapova/Self-Censored/issues/new?title=Suggest%20a%20source%3A%20" target="_blank" rel="noopener noreferrer">
+                                                <strong>Suggest a source</strong>
+                                                <span>Name the outlet and, if it has one, its RSS feed.</span>
+                                            </a>
+                                            <a class="contact-card" href="https://github.com/sonia-sharapova/Self-Censored/issues/new?title=Problem%3A%20" target="_blank" rel="noopener noreferrer">
+                                                <strong>Report a problem</strong>
+                                                <span>A broken feed, a wrong rating, or anything that looks off.</span>
                                             </a>
                                         </div>
                                     </div>
@@ -545,30 +545,31 @@
     </div>
 </div>
 
+<!-- "See all": every row of a list, in a popup -->
+<div id="tableModal" class="modal" style="display: none;">
+    <div class="modal__panel modal__panel--table" role="dialog" aria-labelledby="tableModalTitle">
+        <button class="modal__close" type="button" onclick="closeTableModal()" aria-label="Close">&times;</button>
+        <h2 class="table-modal__title" id="tableModalTitle"></h2>
+        <p class="table-modal__note" id="tableModalNote"></p>
+        <div id="tableModalBody"></div>
+        <div class="table-modal__foot"><button class="btn btn--primary" type="button" onclick="closeTableModal()">Done</button></div>
+    </div>
+</div>
+
 <!-- Storage notice: saving is off until allowed -->
-<div class="consent" id="storageConsent" hidden>
-    <div class="consent__panel" role="dialog" aria-labelledby="consentTitle">
+<div class="consent consent--note" id="storageConsent" hidden>
+    <div class="consent__panel" role="status" aria-labelledby="consentTitle">
         <div class="consent__text">
-            <strong class="consent__title" id="consentTitle">Want to save your configurations for next time?</strong>
-            <div class="consent__options">
-                <div class="consent__option">
-                    <h3 class="consent__heading"><span class="consent__num">Option 1.</span> Local browser data</h3>
-                    <p>Save your keywords, sources and preferences in local browser data.</p>
-                    <p>Local storage is <b>off</b> by default, but can be turned on at any moment in <a href="#settings/data" onclick="consentGoTo(event)">advanced settings</a>.</p>
-                </div>
-                <div class="consent__option">
-                    <h3 class="consent__heading"><span class="consent__num">Option 2.</span> Export configurations</h3>
-                    <p><a href="#" onclick="event.preventDefault(); exportSettings()">Export your preferences as a file</a> and <a href="#" onclick="event.preventDefault(); document.getElementById('importFile').click()">import it back</a> next time (<a href="#settings/data" onclick="consentGoTo(event)">Settings → Advanced settings → Your data</a>).</p>
-                </div>
-            </div>
+            <strong class="consent__title" id="consentTitle">Your settings are saved in this browser</strong>
+            <p>No account and no cookies: your keywords, sources and preferences stay on this device, in local browser data, and are never sent anywhere. You can switch this off, or export your setup as a file, in <a href="#settings/data" onclick="consentGoTo(event)">Settings → Advanced settings → Your data</a>.</p>
         </div>
         <div class="consent__actions">
-            <button class="btn" type="button" onclick="setStorageConsent(false, true)">Reject browser storage</button>
-            <button class="btn btn--primary" type="button" onclick="setStorageConsent(true, true)">Enable local saving</button>
+            <button class="btn" type="button" onclick="setStorageConsent(false, true)">Don't save</button>
+            <button class="btn btn--primary" type="button" onclick="setStorageConsent(true, true)">OK</button>
         </div>
     </div>
 </div>
 
-<script src="script.js"></script>
+<script src="script.js?v=202609292146"></script>
 </body>
 </html>

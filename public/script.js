@@ -10,10 +10,14 @@
 
 // The five most-visited outlets in the catalog that are rated credible and have a
 // working free feed (Fox News is rated Low; the Washington Post feed is down)
-const DEFAULT_SOURCES = ['nyt', 'cnn', 'bbc', 'ap', 'reuters'];   // the five most popular
+// The default feed, and the ones starred to the sidebar
+const DEFAULT_SOURCES = ['cybernews', 'wsj', 'wapo', 'globeandmail', 'propublica', 'pbs', 'npr', 'nature', 'nyt', 'cnn', 'bbc', 'ap'];
+const DEFAULT_FAVORITES = ['pbs', 'nature', 'nyt', 'cnn', 'bbc'];
 // One of each kind of keyword: a wildcard at either end, a plain word, an exact match
-const EXAMPLE_KEYWORDS = ['*ai', 'war', '"Trump"', 'kill*'];
-const DEFAULT_BLOCKED = ['sam altman', ...EXAMPLE_KEYWORDS];
+// The default redactions, which double as examples: a wildcard (*ai: AI,
+// OpenAI…), plain words (any case) and an exact match ("ICE", not "ice")
+const EXAMPLE_KEYWORDS = ['*AI', 'trump', '"ICE"', 'guilty'];
+const DEFAULT_BLOCKED = [...EXAMPLE_KEYWORDS];
 const PAGE_SIZE = 12;   // four rows of three
 
 // Source catalog from /api/sources: [{id, name, topics, icon, credible, available}]
@@ -95,7 +99,7 @@ const DEFAULT_SETTINGS = {
     refreshMinutes: 0,     // 0 (off), 15, 30 or 60
     hideInactiveSources: false,   // hide outlets you can't read: no free feed, or paywalled and not subscribed
     subscriptions: [],            // paywalled outlets you pay for (ids)
-    topics: [...TOPIC_IDS],                            // selected topics
+    topics: ['world', 'politics', 'technology'],       // selected topics (the default three)
     biasLevels: BIAS_LEVELS.map(level => level.id),    // selected bias levels
     moods: MOODS.map(mood => mood.id),                 // selected moods
     useBias: false,        // bias and mood are optional filters, off until switched on
@@ -114,7 +118,7 @@ const sourceScopes = {
     picker: { query: '', filters: emptySourceFilters(), panel: 'sourceFilters', badge: 'sourceFiltersCount', toggle: 'sourceFiltersToggle' },
     selection: { query: '', filters: emptySourceFilters() }
 };
-let sourceView = loadFromLocalStorage('sourceView', 'rows') === 'grid' ? 'grid' : 'rows';
+let sourceView = loadFromLocalStorage('sourceView', 'grid') === 'rows' ? 'rows' : 'grid';   // grid by default
 let detailSourceId = null;
 // "Add sources" picker: open or not, and the outlets ticked but not yet added
 let pickerOpen = false;
@@ -350,12 +354,19 @@ function formatPublished(publishedAt) {
 // Advanced settings → Your data). Reading is always fine.
 const STORAGE_KEYS = ['settings', 'selectedSources', 'favoriteSources', 'blockedKeywords', 'requiredKeywords', 'sourceView', 'defaults', 'sidebarFolded'];
 
-function storageConsent() {
+// Settings are saved in this browser by default (no account, no cookies, never
+// sent anywhere); 'denied' turns that off. The first time you change something
+// a small note says so, with the option to switch it off.
+function storageChoice() {
     try {
-        return localStorage.getItem('storageConsent');   // 'granted' | 'denied' | null (not asked yet)
+        return localStorage.getItem('storageConsent');   // 'granted' | 'denied' | null (never chosen)
     } catch {
         return null;
     }
+}
+
+function storageConsent() {
+    return storageChoice() === 'denied' ? 'denied' : 'granted';
 }
 
 // The storage notice appears only once you've changed your configuration, and
@@ -369,7 +380,17 @@ function saveToLocalStorage(key, data) {
         configChanged = true;
         renderStorageConsent();
     }
-    if (storageConsent() !== 'granted') return;
+    const consent = storageConsent();
+    // Not decided yet: keep it for this tab only (survives a reload, gone when the tab closes)
+    if (consent === null) {
+        try {
+            sessionStorage.setItem(key, JSON.stringify(data));
+        } catch {
+            // storage blocked: nothing to keep
+        }
+        return;
+    }
+    if (consent !== 'granted') return;
     try {
         localStorage.setItem(key, JSON.stringify(data));
     } catch (error) {
@@ -382,6 +403,7 @@ function setStorageConsent(allowed, fromNotice = false) {
     try {
         localStorage.setItem('storageConsent', allowed ? 'granted' : 'denied');
         if (!allowed) STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
+        STORAGE_KEYS.forEach(key => sessionStorage.removeItem(key));
     } catch {
         // storage blocked entirely: nothing to save or remove
     }
@@ -407,20 +429,19 @@ function consentGoTo(event) {
 
 function renderStorageConsent() {
     const consent = storageConsent();
-    const show = consent === null && configChanged && !consentNoticeDismissed;
+    const show = storageChoice() === null && configChanged && !consentNoticeDismissed;
     const notice = document.getElementById('storageConsent');
     if (notice) notice.hidden = !show;
-    document.body.classList.toggle('consent-open', show);
     const toggle = document.getElementById('storageConsentSwitch');
     if (toggle) toggle.checked = consent === 'granted';
     const status = document.getElementById('storageStatus');
-    if (status) status.textContent = consent === 'granted' ? 'On: saved in this browser\'s local storage'
+    if (status) status.textContent = consent === 'granted' ? 'On (the default): kept in this browser only, nothing leaves your device'
         : 'Off: your setup resets when you close the tab (export it to keep it)';
 }
 
 function loadFromLocalStorage(key, defaultValue = null) {
     try {
-        const data = localStorage.getItem(key);
+        const data = storageConsent() === null ? (sessionStorage.getItem(key) ?? localStorage.getItem(key)) : localStorage.getItem(key);
         return data ? JSON.parse(data) : defaultValue;
     } catch (error) {
         console.warn('Could not load from localStorage:', error);
@@ -461,7 +482,7 @@ async function initializeApp() {
 
     // First visit after favourites arrived: start with what's already selected
     const savedFavorites = loadFromLocalStorage('favoriteSources', null);
-    favoriteSources = savedFavorites === null ? [...selectedSources] : normalizeSourceIds(savedFavorites);
+    favoriteSources = savedFavorites === null ? normalizeSourceIds(DEFAULT_FAVORITES) : normalizeSourceIds(savedFavorites);
     if (savedFavorites === null) saveToLocalStorage('favoriteSources', favoriteSources);
 
     renderSources();
@@ -589,6 +610,7 @@ function applySidebarFolds() {
     ['topics', 'sources', 'avoid'].forEach(key => {
         const open = !sidebarFolded.has(key) && !autoFolded.has(key);
         document.getElementById(`${key}Fold`)?.classList.toggle('is-open', open);
+        document.getElementById(`${key}Fold`)?.closest('.sidebar-fold')?.classList.toggle('is-open', open);
         document.getElementById(`${key}Label`)?.setAttribute('aria-expanded', String(open));
     });
 }
@@ -601,7 +623,7 @@ function setSidebarMetric(key, on) {
         setAllOptions(key, true);
     } else {
         settings[flag] = true;
-        if (settings[key].length !== 1) settings[key] = [FILTER_GROUPS[key].steps[1]];
+        if (settings[key].length !== 1) settings[key] = [FILTER_GROUPS[key].steps[0]];
         filtersChanged();
     }
     setTimeout(fitSidebarFavorites, 320);
@@ -624,8 +646,10 @@ function toggleSidebarMetric(key) {
     setTimeout(fitSidebarFavorites, 300);
 }
 
+// Switching bias / mood on starts the slider at its first (left) level
 function setMetricEnabled(key, enabled) {
     settings[key === 'biasLevels' ? 'useBias' : 'useMood'] = enabled;
+    if (enabled && settings[key].length !== 1) settings[key] = [FILTER_GROUPS[key].steps[0]];
     filtersChanged();
 }
 
@@ -738,23 +762,6 @@ function renderFilterGroup(key) {
             more.textContent = `+${active.length - SIDEBAR_MAX_ACTIVE} more`;
             sidebar.appendChild(more);
         }
-        // "+" at the bottom right: a menu of the topics you haven't picked (or,
-        // with every topic on, Topics in Settings)
-        if (inactive.length > 0) {
-            const add = createAddMore(key, inactive);
-            add.classList.add('sidebar__add--right');
-            const toggle = add.querySelector('.sidebar__more');
-            toggle.className = 'row-list__add';
-            toggle.textContent = '+';
-            toggle.setAttribute('aria-label', 'Add a topic');
-            toggle.title = 'Add a topic';
-            sidebar.appendChild(add);
-        } else {
-            const foot = document.createElement('div');
-            foot.className = 'row-list__foot';
-            foot.appendChild(createRowAdd('Topics in Settings', () => openSettings('topics')));
-            sidebar.appendChild(foot);
-        }
     }
 
     // Settings: a tile per topic (icon and name; the description is its hover
@@ -818,20 +825,11 @@ function renderSidebarKeywords() {
 
     const count = document.getElementById('keywordsCount');
     if (count) {
-        count.textContent = String(blockedKeywords.length);
-        count.title = `${blockedKeywords.length} keyword${blockedKeywords.length === 1 ? '' : 's'}: open in Settings`;
+        count.textContent = `${blockedKeywords.length} keyword${blockedKeywords.length === 1 ? '' : 's'}`;
+        count.title = 'Keywords in Settings';
     }
 
-    // "clear all" bottom left, "+" bottom right
-    const foot = document.createElement('div');
-    foot.className = 'row-list__foot';
-    const clear = document.createElement('button');
-    clear.type = 'button';
-    clear.className = 'link-btn link-btn--danger row-list__clear';
-    clear.textContent = 'clear all';
-    clear.addEventListener('click', clearBlockedKeywords);
-    foot.append(clear, createRowAdd('Redact another word', () => openSettings('keywords')));
-    container.replaceChildren(list, foot);
+    container.replaceChildren(list);
 }
 
 function clearBlockedKeywords() {
@@ -880,23 +878,16 @@ function createStepper(key) {
     return stepper;
 }
 
-// Settings' bias / mood control: the spectrum slider, centred, and a red
-// "Clear" (like the Sources footer) that switches the filter off
+// Settings' bias / mood control: the spectrum slider, centred. The switch
+// beside the heading turns it on and off; on, the slider is thicker.
 function createSpectrum(key) {
     const flag = key === 'biasLevels' ? 'useBias' : 'useMood';
     const wrap = document.createElement('div');
-    wrap.className = 'spectrum';
+    wrap.className = settings[flag] ? 'spectrum spectrum--on' : 'spectrum';
     const stepper = createStepper(key);
     stepper.classList.add('stepper--large');
     if (!settings[flag]) stepper.classList.add('stepper--all');
-    const clear = document.createElement('button');
-    clear.type = 'button';
-    clear.className = 'link-btn link-btn--danger spectrum__clear';
-    clear.textContent = 'Clear';
-    clear.disabled = !settings[flag];
-    clear.title = 'Any level: switch this filter off';
-    clear.addEventListener('click', () => setAllOptions(key, true));
-    wrap.append(stepper, clear);
+    wrap.appendChild(stepper);
     return wrap;
 }
 
@@ -961,6 +952,7 @@ function closeMenus() {
 
 function filtersChanged() {
     saveSettings();
+    renderViewFilters();
     renderFilters();
     renderSettingsSources();
     fitSidebarFavorites();
@@ -997,8 +989,8 @@ function renderSources() {
 
 // Sidebar sources: what's in the feed, pinned (★) first then by popularity, the
 // first SIDEBAR_MAX_SOURCES as rows (the name opens the outlet's page; a trash
-// can shows on hover; remove one and the next moves up). "clear all" bottom
-// left, "+" bottom right; the "N sources" count opens your Sources.
+// can shows on hover; remove one and the next moves up). The heading shows
+// the count while folded and "+" (to Settings) while open.
 function renderSidebarSources() {
     const list = document.getElementById('sidebarSources');
     const count = document.getElementById('sourcesCount');
@@ -1036,22 +1028,21 @@ function renderSidebarSources() {
         }));
     });
 
-    const foot = document.createElement('li');
-    foot.className = 'row-list__foot sidebar-sources__all';
+    // "See all": a last row that opens Settings → Sources, on Your sources
     if (inFeed.length > 0) {
-        const clear = document.createElement('button');
-        clear.type = 'button';
-        clear.className = 'link-btn link-btn--danger row-list__clear';
-        clear.textContent = 'clear all';
-        clear.title = 'Asks first, in Settings → Sources';
-        clear.addEventListener('click', () => {
+        const seeAll = document.createElement('li');
+        seeAll.className = 'row-item row-item--see-all';
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'row-item__name';
+        button.innerHTML = `<span>See all</span><span class="row-item__count">${inFeed.length}</span>`;
+        button.addEventListener('click', () => {
             openSettings('sources');
-            askSourcesChange('clear');
+            if (pickerOpen) closeSourcePicker();
         });
-        foot.appendChild(clear);
+        seeAll.appendChild(button);
+        list.appendChild(seeAll);
     }
-    foot.appendChild(createRowAdd('Add sources', () => openSourcePicker()));
-    list.appendChild(foot);
 
     fitSidebarFavorites();
 }
@@ -1264,12 +1255,24 @@ function filteredSources(scope = 'picker') {
 // (your sources) or › (the library). Headers sort. Rows come a page at a time,
 // with a pager underneath; short pages are padded so the table keeps its height.
 
-const PAGE_SIZE_ROWS = 6;
+const PAGE_SIZE_ROWS = 8;
 const PAGE_SIZE_CARDS = 8;
-const tablePages = { feed: 1, available: 1, selection: 1 };
+const tablePages = { feed: 1, available: 1, selection: 1 };   // how many lots of rows are showing ("Show more" adds one)
 const tableSorts = { feed: null, available: { key: 'name', dir: 1 }, selection: { key: 'name', dir: 1 } };
-const rowPicks = new Set();          // your sources ticked for a bulk action (Pin / Remove)
-let selectionExpanded = false;       // the "Current media selection" drop-down
+const feedRemovals = new Set();      // your sources unticked: removed once you confirm
+let tableModalScope = null;          // the "See all" popup, if open ('feed' | 'available')
+let selectionExpanded = false;       // the "Current media selection" list
+let availableExpanded = true;        // the "Available news outlets" list
+
+// Every outlet is already in your feed
+function allSourcesPresent() {
+    return sourceCatalog.length > 0 && sourceCatalog.every(source => selectedSources.includes(source.id));
+}
+
+function toggleLibraryAvailable() {
+    availableExpanded = !availableExpanded;
+    renderSourcePicker();
+}
 let lastPickerChange = null;         // the row just ticked eases into its new look
 
 const BIAS_ORDER = { low: 0, medium: 1, high: 2, unrated: 3 };
@@ -1307,6 +1310,7 @@ function setTablePage(scope, page) {
 function rerenderScope(scope) {
     if (scope === 'feed') renderFeedSources();
     else renderSourcePicker();
+    if (tableModalScope) renderTableModal();
 }
 
 function renderSettingsSources() {
@@ -1328,8 +1332,10 @@ function renderFeedSources() {
     const inFeed = selectedSources.map(sourceById).filter(Boolean);
     const matching = new Set(filteredSources('feed').map(source => source.id));
     const sources = sortSources(inFeed.filter(source => matching.has(source.id)), 'feed');
-    [...rowPicks].forEach(id => { if (!selectedSources.includes(id)) rowPicks.delete(id); });
+    [...feedRemovals].forEach(id => { if (!selectedSources.includes(id)) feedRemovals.delete(id); });
     document.getElementById('feedActions').hidden = inFeed.length === 0;
+    const tabCount = document.getElementById('sourceTabCount');
+    if (tabCount) tabCount.textContent = inFeed.length;
 
     // Nothing in the feed yet: one dashed "+ Add sources to your feed" slot
     if (inFeed.length === 0) {
@@ -1344,18 +1350,18 @@ function renderFeedSources() {
     }
 
     const parts = [];
-    if (rowPicks.size > 0) parts.push(createBulkBar());
+    if (feedRemovals.size > 0) parts.push(createBulkBar());
     parts.push(sourceView === 'grid' ? createSourceGrid(sources) : createSourceTable(sources, 'feed'));
     container.replaceChildren(...parts);
 }
 
-// Ticked rows in your sources: Pin, Remove, or Undo selection
+// Unticked rows in your sources: Remove them, or Undo selection
 function createBulkBar() {
     const bar = document.createElement('div');
     bar.className = 'bulk-bar';
     const count = document.createElement('span');
     count.className = 'bulk-bar__count';
-    count.textContent = `${rowPicks.size} selected`;
+    count.textContent = `${feedRemovals.size} unticked`;
     const action = (label, className, run) => {
         const button = document.createElement('button');
         button.type = 'button';
@@ -1364,25 +1370,16 @@ function createBulkBar() {
         button.addEventListener('click', run);
         return button;
     };
-    const allPinned = [...rowPicks].every(id => favoriteSources.includes(id));
     bar.append(
         count,
-        action(allPinned ? 'Unpin' : 'Pin', 'btn', () => {
-            favoriteSources = allPinned
-                ? favoriteSources.filter(id => !rowPicks.has(id))
-                : [...new Set([...favoriteSources, ...rowPicks])];
-            saveToLocalStorage('favoriteSources', favoriteSources);
-            rowPicks.clear();
-            renderSources();
-        }),
-        action('Remove', 'btn btn--danger', () => {
-            selectedSources = selectedSources.filter(id => !rowPicks.has(id));
-            rowPicks.clear();
+        action(`Remove ${feedRemovals.size}`, 'btn btn--danger', () => {
+            selectedSources = selectedSources.filter(id => !feedRemovals.has(id));
+            feedRemovals.clear();
             sourcesChanged();
         }),
         action('Undo selection', 'link-btn bulk-bar__undo', () => {
-            rowPicks.clear();
-            renderFeedSources();
+            feedRemovals.clear();
+            rerenderScope('feed');
         })
     );
     return bar;
@@ -1445,8 +1442,8 @@ function createDetailsButton(source) {
 function tableTicks(scope) {
     if (scope === 'feed') {
         return {
-            ticked: source => rowPicks.has(source.id),
-            set: (source, on) => (on ? rowPicks.add(source.id) : rowPicks.delete(source.id)),
+            ticked: source => !feedRemovals.has(source.id),
+            set: (source, on) => (on ? feedRemovals.delete(source.id) : feedRemovals.add(source.id)),
             usable: () => true
         };
     }
@@ -1457,19 +1454,18 @@ function tableTicks(scope) {
     };
 }
 
-function createSourceTable(sources, scope) {
+function createSourceTable(sources, scope, { all: showAll = false } = {}) {
     const wrap = document.createElement('div');
     wrap.className = 'src-table';
     const ticks = tableTicks(scope);
-    const pageCount = Math.max(1, Math.ceil(sources.length / PAGE_SIZE_ROWS));
-    tablePages[scope] = Math.min(tablePages[scope], pageCount);
-    const page = sources.slice((tablePages[scope] - 1) * PAGE_SIZE_ROWS, tablePages[scope] * PAGE_SIZE_ROWS);
+    // A few rows at a time ("Show more" adds PAGE_SIZE_ROWS); the "See all" popup shows every one
+    const page = showAll ? sources : sources.slice(0, tablePages[scope] * PAGE_SIZE_ROWS);
 
     const table = document.createElement('table');
     table.className = `src-table__table src-table__table--${scope === 'feed' ? 'feed' : 'library'}`;
     const colgroup = document.createElement('colgroup');
     colgroup.innerHTML = '<col class="c-check"><col class="c-outlet"><col class="c-bias"><col class="c-cred"><col class="c-country">'
-        + (scope === 'feed' ? '<col class="c-pin"><col class="c-act">' : '<col class="c-act">');
+        + '<col class="c-pin"><col class="c-act">';
     table.appendChild(colgroup);
 
     // Header: select-all box and sortable columns
@@ -1512,41 +1508,60 @@ function createSourceTable(sources, scope) {
         th(sortButton('Credibility', 'credibility')),
         th(sortButton('Country', 'country'))
     );
-    if (scope === 'feed') {
-        headRow.append(th('Pinned', 'c-pin'));
-        const trash = document.createElement('span');
-        trash.innerHTML = '<span class="visually-hidden">Remove</span><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>';
-        headRow.append(th(trash, 'c-act'));
-    } else {
-        headRow.append(th(Object.assign(document.createElement('span'), { className: 'visually-hidden', textContent: 'Details' }), 'c-act'));
-    }
+    // Right of the header: how many rows are showing, e.g. "5 of 55"
+    const count = document.createElement('span');
+    count.className = 'src-table__count';
+    count.textContent = `${page.length} of ${sources.length}`;
+    headRow.append(th('Pinned', 'c-pin'), th(count, 'c-act'));
     head.appendChild(headRow);
     table.appendChild(head);
 
     const body = document.createElement('tbody');
     page.forEach(source => body.appendChild(createSourceRow(source, scope, ticks)));
-    // Pad the last page so the table keeps the same height
-    for (let i = page.length; i < PAGE_SIZE_ROWS && pageCount > 1; i++) {
-        const filler = document.createElement('tr');
-        filler.className = 'src-table__filler';
-        filler.setAttribute('aria-hidden', 'true');
-        filler.innerHTML = `<td colspan="${scope === 'feed' ? 7 : 6}"></td>`;
-        body.appendChild(filler);
-    }
     if (sources.length === 0) {
         const empty = document.createElement('tr');
         empty.className = 'src-table__empty';
-        empty.innerHTML = `<td colspan="${scope === 'feed' ? 7 : 6}"></td>`;
+        empty.innerHTML = `<td colspan="7"></td>`;
         empty.firstChild.textContent = scope === 'feed' ? 'None of your sources match. Try clearing the search or filters.'
             : scope === 'selection' ? 'Nothing in your selection matches.' : 'No outlets match. Try clearing the search or filters.';
         body.appendChild(empty);
     }
+    // "⌄ Show 5 more" as a last row, centred; "See all" at its right
+    if (!showAll && page.length < sources.length) {
+        const moreRow = document.createElement('tr');
+        moreRow.className = 'src-table__more';
+        const cell = document.createElement('td');
+        cell.colSpan = 7;
+        const more = document.createElement('button');
+        more.type = 'button';
+        more.className = 'src-table__more-btn';
+        more.innerHTML = `<span class="show-more__chev" aria-hidden="true">⌄</span> Show ${Math.min(PAGE_SIZE_ROWS, sources.length - page.length)} more`;
+        more.addEventListener('click', event => {
+            event.stopPropagation();
+            setTablePage(scope, tablePages[scope] + 1);
+        });
+        cell.appendChild(more);
+        moreRow.addEventListener('click', () => more.click());
+        if (scope !== 'selection') {
+            const seeAll = document.createElement('button');
+            seeAll.type = 'button';
+            seeAll.className = 'link-btn src-table__see-all';
+            seeAll.textContent = 'See all';
+            seeAll.addEventListener('click', event => {
+                event.stopPropagation();
+                openTableModal(scope === 'feed' ? 'feed' : 'available');
+            });
+            cell.appendChild(seeAll);
+        }
+        moreRow.appendChild(cell);
+        body.appendChild(moreRow);
+    }
     table.appendChild(body);
     wrap.appendChild(table);
-    // The page count and arrows sit under the box, not in a footer band
     const outer = document.createElement('div');
     outer.className = 'src-table-outer';
-    outer.append(wrap, createTablePager(scope, sources.length, pageCount, PAGE_SIZE_ROWS));
+    outer.appendChild(wrap);
+
     return outer;
 }
 
@@ -1555,8 +1570,8 @@ function createSourceRow(source, scope, ticks) {
     const inFeed = selectedSources.includes(source.id);
     const ticked = ticks.ticked(source);
     row.tabIndex = 0;
-    if (ticked) row.classList.add('is-selected');
-    if (scope !== 'feed' && inFeed && !ticked) row.classList.add('is-removing');
+    if (ticked && scope !== 'feed') row.classList.add('is-selected');
+    if (inFeed && !ticked) row.classList.add('is-removing');
     if (!ticks.usable(source)) row.classList.add('is-disabled');
     if (lastPickerChange === source.id) row.classList.add('just-changed');
 
@@ -1590,7 +1605,8 @@ function createSourceRow(source, scope, ticks) {
     const name = document.createElement('span');
     name.className = 'src-table__name';
     name.textContent = source.name;
-    const status = scope !== 'feed' && inFeed ? (ticked ? 'In your feed' : 'Will be removed') : !source.available ? 'No free feed' : '';
+    const status = inFeed && !ticked ? 'Will be removed'
+        : scope !== 'feed' && inFeed ? 'In your feed' : !source.available ? 'No free feed' : '';
     if (status) {
         const small = document.createElement('small');
         small.textContent = status;
@@ -1605,9 +1621,86 @@ function createSourceRow(source, scope, ticks) {
         sourceCell(createCredibilityBadge(source)),
         sourceCell(source.country || '—', 'src-table__muted')
     );
-    if (scope === 'feed') row.append(sourceCell(createStar(source), 'c-pin'), sourceCell(createTrashButton(source), 'c-act'));
-    else row.append(sourceCell(createDetailsButton(source), 'c-act'));
+    row.append(sourceCell(createStar(source), 'c-pin'),
+        sourceCell(scope === 'feed' ? createTrashButton(source) : createDetailsButton(source), 'c-act'));
     return row;
+}
+
+// Under a table or grid: "⌄ Show more" (the next few), "12 of 55", and "See all"
+// (every row in a popup)
+function createShowMore(scope, total, shown, step) {
+    const bar = document.createElement('div');
+    bar.className = 'show-more';
+    const more = document.createElement('button');
+    more.type = 'button';
+    more.className = 'show-more__btn';
+    const next = Math.min(step, total - shown);
+    more.innerHTML = `<span class="show-more__chev" aria-hidden="true">⌄</span> Show ${next} more`;
+    more.hidden = shown >= total;
+    more.addEventListener('click', () => setTablePage(scope, tablePages[scope] + 1));
+    const count = document.createElement('span');
+    count.className = 'show-more__count';
+    count.textContent = total === 0 ? '' : `${shown} of ${total}`;
+    const seeAll = document.createElement('button');
+    seeAll.type = 'button';
+    seeAll.className = 'link-btn show-more__all';
+    seeAll.textContent = 'See all';
+    seeAll.hidden = total <= step || scope === 'selection';
+    seeAll.addEventListener('click', () => openTableModal(scope === 'feed' ? 'feed' : 'available'));
+    bar.append(more, count, seeAll);
+    return bar;
+}
+
+// "See all": every row of a list in a popup, the table as tall as it needs
+function openTableModal(scope) {
+    tableModalScope = scope;
+    const modal = document.getElementById('tableModal');
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+    renderTableModal();
+    // Open near where the table sits on the page (its box's top edge)
+    const box = document.querySelector(scope === 'feed' ? '#sourcesMine .src-box' : '#sourcePicker .src-box');
+    const rect = box ? box.getBoundingClientRect() : null;
+    const panel = modal.querySelector('.modal__panel');
+    const wide = window.innerWidth > 760;
+    // Across the Settings content, starting just above the table (kept high
+    // enough to leave room for the list); the table inside is 80% of it
+    const area = document.querySelector('.settings-page__inner')?.getBoundingClientRect();
+    panel.style.marginTop = rect ? `${Math.min(Math.max(24, rect.top - 24), window.innerHeight * 0.35)}px` : '';
+    panel.style.marginLeft = area && wide ? `${Math.max(16, area.left - 16)}px` : '';
+    panel.style.width = area && wide ? `${area.width + 32}px` : '';
+    panel.style.maxHeight = `${window.innerHeight - panel.getBoundingClientRect().top - 16}px`;
+}
+
+function closeTableModal() {
+    const modal = document.getElementById('tableModal');
+    if (!modal || modal.style.display === 'none') return;
+    tableModalScope = null;
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+    // Closing it lands on the "Add more" tab
+    if (!pickerOpen) openSourcePicker();
+}
+
+function tableModalSources(scope) {
+    if (scope === 'available') return pickerSources().available;
+    const matching = new Set(filteredSources('feed').map(source => source.id));
+    return sortSources(selectedSources.map(sourceById).filter(source => source && matching.has(source.id)), 'feed');
+}
+
+function renderTableModal() {
+    if (!tableModalScope) return;
+    const sources = tableModalSources(tableModalScope);
+    document.getElementById('tableModalTitle').textContent = tableModalScope === 'feed'
+        ? `Your sources (${sources.length})` : `Available news outlets (${sources.length})`;
+    const body = document.getElementById('tableModalBody');
+    const parts = [];
+    if (tableModalScope === 'feed' && feedRemovals.size > 0) parts.push(createBulkBar());
+    parts.push(createSourceTable(sources, tableModalScope, { all: true }));
+    body.replaceChildren(...parts);
+    const note = document.getElementById('tableModalNote');
+    if (note) note.textContent = tableModalScope === 'available'
+        ? 'Ticked outlets are added when you press Add under the list.' : '';
 }
 
 // "‹ 1 2 3 ›   7–12 of 23" under a table or grid
@@ -1660,28 +1753,20 @@ function createTablePager(scope, total, pageCount, size) {
 function createSourceGrid(sources) {
     const wrap = document.createElement('div');
     wrap.className = 'src-grid-wrap';
-    const pageCount = Math.max(1, Math.ceil(sources.length / PAGE_SIZE_CARDS));
-    tablePages.feed = Math.min(tablePages.feed, pageCount);
-    const page = sources.slice((tablePages.feed - 1) * PAGE_SIZE_CARDS, tablePages.feed * PAGE_SIZE_CARDS);
+    const page = sources;   // the grid shows every card, one continuous grid
     const grid = document.createElement('div');
     grid.className = 'src-grid';
     page.forEach(source => grid.appendChild(createSourceCard(source)));
-    for (let i = page.length; i < PAGE_SIZE_CARDS && pageCount > 1; i++) {
-        const filler = document.createElement('div');
-        filler.className = 'src-card src-card--filler';
-        filler.setAttribute('aria-hidden', 'true');
-        grid.appendChild(filler);
-    }
     wrap.append(grid);
     const outer = document.createElement('div');
     outer.className = 'src-table-outer';
-    outer.append(wrap, createTablePager('feed', sources.length, pageCount, PAGE_SIZE_CARDS));
+    outer.append(wrap);
     return outer;
 }
 
 function createSourceCard(source) {
     const card = document.createElement('article');
-    card.className = 'src-card';
+    card.className = isPinned(source) ? 'src-card src-card--pinned' : 'src-card';
     card.tabIndex = 0;
     card.title = `Details for ${source.name}`;
     card.addEventListener('click', () => openSourceDetail(source.id));
@@ -1699,19 +1784,13 @@ function createSourceCard(source) {
     const country = document.createElement('span');
     country.className = 'src-card__sub';
     country.textContent = source.country || '—';
-    titles.append(name, country);
+    titles.append(name);
     const star = createStar(source);
     star.classList.add('src-card__star');
     head.append(createLogoBox(source, 'lg'), titles, star);
 
-    const tags = document.createElement('div');
-    tags.className = 'src-card__tags';
-    topicNames(source).slice(0, 2).forEach(topic => {
-        const tag = document.createElement('span');
-        tag.className = 'topic-tag';
-        tag.textContent = topic;
-        tags.appendChild(tag);
-    });
+    const tags = document.createElement('hr');   // a line between the name and the ratings
+    tags.className = 'src-card__rule';
 
     const facts = document.createElement('dl');
     facts.className = 'src-card__facts';
@@ -1740,8 +1819,9 @@ function createSourceCard(source) {
 
 function openSourcePicker() {
     if (!settingsOpen()) openSettings('sources');
+    const before = tableViewHash();
     pickerOpen = true;
-    selectionExpanded = false;
+    availableExpanded = true;
     pendingSources = new Set();
     pendingRemovals = new Set();
     tablePages.available = 1;
@@ -1750,8 +1830,9 @@ function openSourcePicker() {
     cancelSourcesChange();
     document.getElementById('sourcesMine').hidden = true;
     document.getElementById('sourcePicker').hidden = false;
+    setSourceTab('add');
+    pushTableView(before);
     renderSourcePicker();
-    document.getElementById('settingsSourcesSection')?.scrollIntoView({ block: 'start' });
     document.getElementById('sourceSearch')?.focus({ preventScroll: true });
 }
 
@@ -1765,10 +1846,9 @@ function closeSourcePicker(rerender = true) {
     if (picker) picker.hidden = true;
     const mine = document.getElementById('sourcesMine');
     if (mine) mine.hidden = false;
-    if (rerender && wasOpen) {
-        renderFeedSources();
-        document.getElementById('settingsSourcesSection')?.scrollIntoView({ block: 'start' });
-    }
+    setSourceTab('current');
+    if (wasOpen) pushTableView();
+    if (rerender && wasOpen) renderFeedSources();
 }
 
 function confirmSourcePicker() {
@@ -1781,13 +1861,11 @@ function confirmSourcePicker() {
 function pickerSources() {
     const searching = sourceScopes.picker.query.trim() !== '';
     const selectionQuery = sourceScopes.selection.query.trim().toLowerCase();
-    // Outlets not in your feed; with every outlet already selected, all of
-    // them show here ticked rather than an empty table
+    // Outlets not in your feed (while searching, matching ones already in it too)
     const matching = filteredSources('picker');
     const notInFeed = matching.filter(source => !selectedSources.includes(source.id));
-    const allSelected = notInFeed.length === 0 && matching.length > 0;
     return {
-        available: sortSources(searching || allSelected ? matching : notInFeed, 'available'),
+        available: sortSources(searching ? matching : notInFeed, 'available'),
         selection: sortSources(selectedSources.map(sourceById).filter(Boolean)
             .filter(source => !selectionQuery || [source.name, source.owner, source.country, ...(source.aliases || [])]
                 .some(text => text && text.toLowerCase().includes(selectionQuery))), 'selection')
@@ -1810,6 +1888,12 @@ function setPickerTicked(source, ticked) {
     }
 }
 
+// The Sources tabs: "Your sources" and "Add more"
+function setSourceTab(tab) {
+    document.getElementById('sourceTabCurrent')?.setAttribute('aria-selected', String(tab === 'current'));
+    document.getElementById('sourceTabAdd')?.setAttribute('aria-selected', String(tab === 'add'));
+}
+
 function toggleLibrarySelection() {
     selectionExpanded = !selectionExpanded;
     renderSourcePicker();
@@ -1822,7 +1906,43 @@ function renderSourcePicker() {
     renderSourceFilters('picker');
     const lists = pickerSources();
 
-    available.replaceChildren(createListBar('available', lists.available), createSourceTable(lists.available, 'available'));
+    const searching = sourceScopes.picker.query.trim() !== '';
+    const allPresent = allSourcesPresent() && !searching;
+    const note = document.getElementById('libraryAllPresent');
+    if (note) note.hidden = !allPresent;
+    if (allPresent) available.replaceChildren();
+    else available.replaceChildren(createSourceTable(lists.available, 'available'));
+    // Footer, left: how many are ticked, and "Undo selection"
+    const summary = document.getElementById('pickerSummary');
+    if (summary && !summary.childElementCount) {
+        const link = (label, className, run) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = className;
+            button.textContent = label;
+            button.addEventListener('click', run);
+            return button;
+        };
+        summary.append(
+            // Clear all: untick everything ticked here
+            link('Clear all', 'link-btn link-btn--danger', () => {
+                pendingSources = new Set();
+                pendingRemovals = new Set();
+                renderSourcePicker();
+            }),
+            // Reset: also clear the search and filters, back to the first rows
+            link('Reset', 'link-btn', () => {
+                pendingSources = new Set();
+                pendingRemovals = new Set();
+                sourceScopes.picker.query = '';
+                sourceScopes.picker.filters = emptySourceFilters();
+                const search = document.getElementById('sourceSearch');
+                if (search) search.value = '';
+                tablePages.available = 1;
+                renderSourcePicker();
+            })
+        );
+    }
     if (selectionBox) selectionBox.replaceChildren(createListBar('selection', lists.selection), createSourceTable(lists.selection, 'selection'));
 
     // "N sources →" in the Current media selection header
@@ -1832,6 +1952,9 @@ function renderSourcePicker() {
         back.innerHTML = `<span>${n} source${n === 1 ? '' : 's'}</span><span aria-hidden="true">→</span>`;
     }
     document.getElementById('librarySelectionBody')?.classList.toggle('is-open', selectionExpanded);
+    document.getElementById('libraryAvailableBody')?.classList.toggle('is-open', availableExpanded);
+    document.getElementById('libraryAvailableToggle')?.setAttribute('aria-expanded', String(availableExpanded));
+
     document.getElementById('librarySelectionToggle')?.setAttribute('aria-expanded', String(selectionExpanded));
 
     // "Add 2", "Remove 1", or "Apply (+2 −1)"
@@ -1980,8 +2103,36 @@ function setSourceQuery(value, scope = 'picker') {
     else renderSourcePicker();
 }
 
+// Each table view (tab, grid or rows) gets its own history entry, so the
+// browser's Back button returns to the previous one
+let restoringTableView = false;
+
+function tableViewHash() {
+    return `#settings/sources/${pickerOpen ? 'add' : 'mine'}/${sourceView}`;
+}
+
+// `before`: the view being left, so the first Back lands on it too
+function pushTableView(before) {
+    if (restoringTableView || !settingsOpen()) return;
+    if (before && !location.hash.startsWith('#settings/sources/')) history.replaceState(null, '', before);
+    const hash = tableViewHash();
+    if (location.hash !== hash) history.pushState(null, '', hash);
+}
+
+// From a #settings/sources/<tab>/<view> address (Back / Forward): no scrolling
+function restoreTableView(hash) {
+    const [, , tab, view] = hash.slice(1).split('/');
+    restoringTableView = true;
+    if (view === 'grid' || view === 'rows') setSourceView(view);
+    if (tab === 'add' && !pickerOpen) openSourcePicker({ scroll: false });
+    if (tab === 'mine' && pickerOpen) closeSourcePicker();
+    restoringTableView = false;
+}
+
 function setSourceView(view) {
+    const before = tableViewHash();
     sourceView = view === 'grid' ? 'grid' : 'rows';
+    pushTableView(before);
     saveToLocalStorage('sourceView', sourceView);
     tablePages.feed = 1;
     renderFeedSources();
@@ -2203,15 +2354,15 @@ function toggleSource(sourceId, checked) {
 // Keywords match whole words ("ai" won't hide "said"). Multi-word keywords
 // match as a phrase, and a trailing `*` matches any ending ("crypto*").
 
-// Tidy a keyword. Plain ones are lower-cased; "double-quoted" ones keep their
-// quotes and capitals, because they match exactly
+// Tidy a keyword (spaces, curly quotes). "Double-quoted" ones keep their quotes
+// and match exactly; plain ones match in any case
 function normalizeKeyword(value) {
     if (typeof value !== 'string') return '';
     let keyword = value.trim().replace(/[“”]/g, '"').replace(/\s+/g, ' ');
     const quoted = /^".+"$/.test(keyword);
     keyword = keyword.replace(/^["']+|["']+$/g, '').trim();
     if (!keyword) return '';
-    return quoted ? `"${keyword}"` : keyword.toLowerCase();
+    return quoted ? `"${keyword}"` : keyword;   // shown as typed; plain keywords match any case
 }
 
 function isExactKeyword(keyword) {
@@ -2235,7 +2386,9 @@ function addKeywordFromSettings(event) {
 function addToKeywordList(kind, value) {
     const keyword = normalizeKeyword(value);
     const list = kind === 'required' ? requiredKeywords : blockedKeywords;
-    if (!keyword || list.includes(keyword)) return false;
+    // Plain keywords that differ only in case are the same keyword
+    const same = other => other === keyword || (!isExactKeyword(keyword) && !isExactKeyword(other) && other.toLowerCase() === keyword.toLowerCase());
+    if (!keyword || list.some(same)) return false;
 
     list.push(keyword);
     keywordsChanged();
@@ -2452,7 +2605,8 @@ function renderNews() {
         && articleTopics(article).some(topic => settings.topics.includes(topic))
         && (!settings.useBias || settings.biasLevels.includes(articleBiasLevel(article)))
         && (!settings.useMood || settings.moods.includes(article.mood || 'neutral'))
-        && matchesSearch(article));
+        && matchesSearch(article)
+        && matchesViewFilters(article));
 
     const shown = [];
     const hidden = [];
@@ -2484,6 +2638,11 @@ function renderNews() {
 // "ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧ Displaying 87 articles (16 hidden)", with "16 hidden ⌄"
 // on the right opening the list of what was hidden and why
 function renderSummary(shownCount, hidden) {
+    const seeHidden = document.getElementById('seeHidden');
+    if (seeHidden) {
+        seeHidden.textContent = `See hidden (${hidden.length})`;
+        seeHidden.disabled = hidden.length === 0;
+    }
     const summary = document.getElementById('feedSummary');
     const status = document.getElementById('status');
     const toggle = document.getElementById('hiddenToggle');
@@ -2563,27 +2722,35 @@ function renderPager(total) {
         return span;
     };
 
-    pager.append(
-        Object.assign(button('« First', 1, { ariaLabel: 'First page' }), { className: 'pager__btn pager__btn--first' }),
+    const start = document.createElement('span');
+    start.className = 'pager__edge';
+    start.append(
+        button('« First', 1, { ariaLabel: 'First page' }),
         button('‹ Previous', currentPage - 1, { ariaLabel: 'Previous page' })
     );
+    const numbers = document.createElement('span');
+    numbers.className = 'pager__numbers';
+    pager.append(start, numbers);
 
-    // Always show the first and last page, and two either side of the current one
+    // Always the first and last page, and four either side of the current one
     const pages = new Set([1, pageCount]);
-    for (let page = currentPage - 2; page <= currentPage + 2; page++) {
+    for (let page = currentPage - 4; page <= currentPage + 4; page++) {
         if (page >= 1 && page <= pageCount) pages.add(page);
     }
     let previous = 0;
     [...pages].sort((a, b) => a - b).forEach(page => {
-        if (page - previous > 1) pager.appendChild(gap());
-        pager.appendChild(button(String(page), page, { current: page === currentPage, ariaLabel: `Page ${page}` }));
+        if (page - previous > 1) numbers.appendChild(gap());
+        numbers.appendChild(button(String(page), page, { current: page === currentPage, ariaLabel: `Page ${page}` }));
         previous = page;
     });
 
-    pager.append(
+    const end = document.createElement('span');
+    end.className = 'pager__edge';
+    end.append(
         button('Next ›', currentPage + 1, { ariaLabel: 'Next page' }),
-        Object.assign(button('Last »', pageCount, { ariaLabel: 'Last page' }), { className: 'pager__btn pager__btn--last' })
+        button('Last »', pageCount, { ariaLabel: 'Last page' })
     );
+    pager.appendChild(end);
 
     const summary = document.createElement('p');
     summary.className = 'pager__summary';
@@ -2595,7 +2762,7 @@ function renderPager(total) {
 function goToPage(page) {
     currentPage = page;
     renderNews();
-    document.querySelector('.summary-row')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelector('.newsroom-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ==============================================
@@ -2730,9 +2897,9 @@ function showNoResults(message = 'Nothing survived your filters, or the selected
 // ----------------------------------------------
 
 const FACTORY_DEFAULTS = {
-    selectedSources: [...DEFAULT_SOURCES],   // the five most popular
-    blockedKeywords: [...DEFAULT_BLOCKED],   // "sam altman"
-    topics: [...TOPIC_IDS],
+    selectedSources: [...DEFAULT_SOURCES],
+    blockedKeywords: [...DEFAULT_BLOCKED],   // *ai, trump, "ICE", guilty
+    topics: ['world', 'politics', 'technology'],
     useBias: false,
     useMood: false,
     biasLevels: BIAS_LEVELS.map(level => level.id),
@@ -2932,6 +3099,7 @@ const SETTINGS_SECTIONS = {
     sources: ['preferences', 'settingsSourcesSection'],
     bias: ['preferences', 'settingsBiasSection'],
     mood: ['preferences', 'settingsMoodSection'],
+    spectrum: ['preferences', 'settingsSpectrumSection'],
     appearance: ['appearance'],
     preferences: ['preferences'],
     advanced: ['advanced'],
@@ -2941,7 +3109,7 @@ const SETTINGS_SECTIONS = {
 };
 const SETTINGS_SUBNAV = {
     appearance: [['settingsAppearanceSection', 'Theme']],
-    preferences: [['settingsKeywordsSection', 'Redacted keywords'], ['settingsTopicsSection', 'Topics'], ['settingsSourcesSection', 'Sources'], ['settingsBiasSection', 'Bias'], ['settingsMoodSection', 'Mood']],
+    preferences: [['settingsTopicsSection', 'Topics'], ['settingsSourcesSection', 'Sources'], ['settingsKeywordsSection', 'Redacted keywords'], ['settingsSpectrumSection', 'The Spectrum']],
     advanced: [['settingsAdvancedSection', 'Feed'], ['settingsDataSection', 'Your data'], ['settingsDefaultsSection', 'Defaults']],
     contact: [['settingsContactSection', 'Contact']]
 };
@@ -2976,6 +3144,7 @@ function closeSettings(event) {
 
 // Swap the feed for the Settings page (or back), from the URL
 function showSettingsPage(section = location.hash.slice('#settings/'.length) || null, open = settingsOpen()) {
+    setTimeout(alignSidebarNav, 0);
     const page = document.getElementById('settingsPage');
     if (!page) return;
     page.hidden = !open;
@@ -2999,13 +3168,28 @@ function showSettingsPage(section = location.hash.slice('#settings/'.length) || 
         openSourceDetail(section.slice('source:'.length));
         return;
     }
+    // A table view address (#settings/sources/add/grid): open Sources in that view
+    if (section?.startsWith('sources/')) {
+        showSettingsGroup('preferences');
+        jumpToSetting('settingsSourcesSection');
+        restoreTableView(location.hash);
+        return;
+    }
     const [group, target] = SETTINGS_SECTIONS[section] || [settingsGroup];
     showSettingsGroup(group);
     if (target) jumpToSetting(target);
     if (section === 'keywords') document.getElementById('settingsKeywordInput')?.focus({ preventScroll: true });
 }
 
-window.addEventListener('popstate', () => showSettingsPage());
+window.addEventListener('popstate', () => setTimeout(alignSidebarNav, 50));
+window.addEventListener('popstate', () => {
+    // Moving between table views on an open Settings page: just switch the view
+    if (location.hash.startsWith('#settings/sources/') && !document.getElementById('settingsPage').hidden) {
+        restoreTableView(location.hash);
+        return;
+    }
+    showSettingsPage();
+});
 
 // Show one tab's sections, and its section list on the left
 function showSettingsGroup(group) {
@@ -3026,6 +3210,7 @@ function showSettingsGroup(group) {
             return button;
         }));
     }
+    if (GROUP_PANES[group]) showPrefPane(GROUP_PANES[group]);
     scrollToSettingsTop();
     updateSettingsSubnav();
 }
@@ -3033,13 +3218,54 @@ function showSettingsGroup(group) {
 // The top of the Settings page (on phones the sidebar sits above it)
 function scrollToSettingsTop() {
     const page = document.getElementById('settingsPage');
-    if (page) window.scrollTo(0, Math.max(0, page.getBoundingClientRect().top + window.scrollY - 40));
+    const stacked = getComputedStyle(document.querySelector('.sidebar')).position !== 'sticky';   // phones
+    if (page && stacked) window.scrollTo(0, Math.max(0, page.getBoundingClientRect().top + window.scrollY - 40));
+    else window.scrollTo(0, 0);
 }
 
 // A section link jumps to its section on the page
+// Configure shows one section at a time (its item in the list on the left);
+// The Spectrum holds Bias and Mood
+const PREF_PANES = {
+    settingsTopicsSection: ['settingsTopicsSection'],
+    settingsSourcesSection: ['settingsSourcesSection'],
+    settingsKeywordsSection: ['settingsKeywordsSection'],
+    settingsSpectrumSection: ['settingsSpectrumSection', 'settingsBiasSection', 'settingsMoodSection'],
+    settingsAdvancedSection: ['settingsAdvancedSection'],
+    settingsDataSection: ['settingsDataSection'],
+    settingsDefaultsSection: ['settingsDefaultsSection']
+};
+const GROUP_PANES = { preferences: 'settingsTopicsSection', advanced: 'settingsAdvancedSection' };   // each tab's open section
+let prefPane = 'settingsTopicsSection';
+
+function paneOf(id) {
+    return Object.keys(PREF_PANES).find(pane => PREF_PANES[pane].includes(id));
+}
+
+function showPrefPane(pane) {
+    prefPane = pane;
+    const group = document.getElementById(pane)?.closest('.settings-group')?.dataset.group;
+    if (group) GROUP_PANES[group] = pane;
+    // Hide the other sections of this pane's tab
+    const siblings = Object.keys(PREF_PANES).filter(other => document.getElementById(other)?.closest('.settings-group')?.dataset.group === group);
+    siblings.forEach(other => PREF_PANES[other].forEach(id => {
+        const section = document.getElementById(id);
+        if (section) section.hidden = other !== pane;
+    }));
+}
+
 function jumpToSetting(id) {
     const target = document.getElementById(id);
     if (!target) return;
+    const pane = paneOf(id);
+    if (pane) {
+        showPrefPane(pane);
+        updateSettingsSubnav(pane);
+        // Stay put, with the heading in view: only scroll if the section's top is off screen
+        const top = document.querySelector('.settings-layout')?.getBoundingClientRect().top ?? 0;
+        if (top < 0) scrollToSettingsTop();
+        return;
+    }
     subnavHold = { id, until: Date.now() + 600 };
     target.scrollIntoView({ block: 'start' });
     updateSettingsSubnav(id);
@@ -3049,7 +3275,7 @@ function jumpToSetting(id) {
 function updateSettingsSubnav(forced) {
     const buttons = [...document.querySelectorAll('#settingsSubnav [data-target]')];
     if (buttons.length === 0) return;
-    let current = forced;
+    let current = GROUP_PANES[settingsGroup] || forced;
     if (!current) {
         const top = 160;
         current = buttons[0].dataset.target;
@@ -3184,6 +3410,7 @@ if (document.readyState === 'loading') {
 
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
+        closeTableModal();
         if (pendingSourcesChange) cancelSourcesChange();
         closeMenus();
         closeSourceFilters();
@@ -3197,6 +3424,7 @@ window.addEventListener('resize', () => fitSidebarFavorites());
 // Clicking the dimmed backdrop closes a modal
 document.addEventListener('click', function(event) {
     if (event.target.classList?.contains('modal')) {
+        closeTableModal();
         closeErrorModal();
         closeSourcePicker(false);
     }
@@ -3270,4 +3498,167 @@ document.addEventListener('click', event => {
 });
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape') closeNavMenus();
+});
+
+// ----------------------------------------------
+// NEWSROOM FILTER: narrow the feed to part of your current setup (your topics,
+// sources, bias, mood). Just for this view: nothing in Settings changes.
+// ----------------------------------------------
+
+const viewFilters = { topics: [], sources: [], bias: [], mood: [] };   // empty = all
+
+function matchesViewFilters(article) {
+    const source = sourcesByName.get(article.source);
+    return (viewFilters.topics.length === 0 || articleTopics(article).some(topic => viewFilters.topics.includes(topic)))
+        && (viewFilters.sources.length === 0 || (source && viewFilters.sources.includes(source.id)))
+        && (viewFilters.bias.length === 0 || viewFilters.bias.includes(articleBiasLevel(article)))
+        && (viewFilters.mood.length === 0 || viewFilters.mood.includes(article.mood || 'neutral'));
+}
+
+// Only choices from your current configuration
+function viewFilterGroups() {
+    const yourSources = selectedSources.map(sourceById).filter(Boolean).sort(byPopularity);
+    return [
+        { key: 'topics', label: 'Topics', options: TOPICS.filter(topic => settings.topics.includes(topic.id)).map(topic => [topic.id, topic.name]) },
+        { key: 'sources', label: 'Sources', options: yourSources.map(source => [source.id, source.name]) },
+        { key: 'bias', label: 'Bias', options: BIAS_LEVELS.filter(level => level.id !== 'unrated' && (!settings.useBias || settings.biasLevels.includes(level.id))).map(level => [level.id, level.name]) },
+        { key: 'mood', label: 'Mood', options: MOODS.filter(mood => !settings.useMood || settings.moods.includes(mood.id)).map(mood => [mood.id, mood.name]) }
+    ].filter(group => group.options.length > 1);
+}
+
+function renderViewFilters() {
+    const panel = document.getElementById('viewFilters');
+    const badge = document.getElementById('viewFiltersCount');
+    if (!panel) return;
+    const groups = viewFilterGroups();
+    // Drop picks that are no longer part of your setup
+    Object.keys(viewFilters).forEach(key => {
+        const allowed = groups.find(group => group.key === key)?.options.map(([id]) => id) || [];
+        viewFilters[key] = viewFilters[key].filter(id => allowed.includes(id));
+    });
+    const active = Object.values(viewFilters).filter(list => list.length > 0).length;
+    if (badge) {
+        badge.hidden = active === 0;
+        badge.textContent = active;
+    }
+
+    panel.innerHTML = '';
+    const note = document.createElement('p');
+    note.className = 'filter-pop__note';
+    note.textContent = 'From your current setup. Just for this view.';
+    panel.appendChild(note);
+    groups.forEach(group => {
+        const section = document.createElement('div');
+        section.className = 'filter-pop__group';
+        const head = document.createElement('div');
+        head.className = 'filter-pop__head';
+        const label = document.createElement('p');
+        label.className = 'eyebrow';
+        label.textContent = group.label;
+        const allLabel = document.createElement('label');
+        allLabel.className = 'check';
+        const all = document.createElement('input');
+        all.type = 'checkbox';
+        all.checked = viewFilters[group.key].length === 0;
+        all.addEventListener('change', () => {
+            viewFilters[group.key] = [];
+            viewFiltersChanged();
+        });
+        allLabel.append(all, 'All');
+        head.append(label, allLabel);
+        const chips = document.createElement('div');
+        chips.className = 'chip-choices';
+        group.options.forEach(([id, name]) => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.textContent = name;
+            chip.setAttribute('aria-pressed', String(viewFilters[group.key].includes(id)));
+            chip.addEventListener('click', event => {
+                event.stopPropagation();
+                const current = viewFilters[group.key];
+                viewFilters[group.key] = current.includes(id) ? current.filter(x => x !== id) : [...current, id];
+                viewFiltersChanged();
+            });
+            chips.appendChild(chip);
+        });
+        section.append(head, chips);
+        panel.appendChild(section);
+    });
+    if (active > 0) {
+        const reset = document.createElement('button');
+        reset.type = 'button';
+        reset.className = 'link-btn link-btn--danger filter-pop__reset';
+        reset.textContent = 'Clear filter';
+        reset.addEventListener('click', event => {
+            event.stopPropagation();
+            Object.keys(viewFilters).forEach(key => { viewFilters[key] = []; });
+            viewFiltersChanged();
+        });
+        panel.appendChild(reset);
+    }
+}
+
+function viewFiltersChanged() {
+    currentPage = 1;
+    renderViewFilters();
+    renderNews();
+}
+
+function toggleViewFilters(event) {
+    event.stopPropagation();
+    const panel = document.getElementById('viewFilters');
+    const opening = panel.hidden;
+    closeSourceFilters();
+    if (opening) renderViewFilters();
+    panel.hidden = !opening;
+    document.getElementById('viewFiltersToggle').setAttribute('aria-expanded', String(opening));
+}
+
+function closeViewFilters() {
+    const panel = document.getElementById('viewFilters');
+    if (panel && !panel.hidden) {
+        panel.hidden = true;
+        document.getElementById('viewFiltersToggle')?.setAttribute('aria-expanded', 'false');
+    }
+}
+
+document.addEventListener('click', event => {
+    if (!event.target.closest?.('.newsroom-filter')) closeViewFilters();
+});
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeViewFilters();
+});
+
+// "See hidden": open the list of hidden articles and scroll to it
+function showHiddenArticles() {
+    const summary = document.getElementById('feedSummary');
+    if (!summary || summary.style.display === 'none') return;
+    summary.open = true;
+    summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// NEWSROOM starts level with the page title (the feed's, or Settings'),
+// whatever the sidebar above it measures on this screen
+function alignSidebarNav() {
+    const nav = document.querySelector('.sidebar-nav');
+    const sidebar = document.querySelector('.sidebar');
+    if (!nav || !sidebar || getComputedStyle(sidebar).position !== 'sticky') return;
+    const title = settingsOpen() ? document.getElementById('settingsTitle') : document.querySelector('.title');
+    if (!title || !title.offsetParent) return;
+    nav.style.marginTop = '0px';
+    const gap = title.getBoundingClientRect().top + window.scrollY - (nav.getBoundingClientRect().top + window.scrollY);
+    nav.style.marginTop = `${Math.max(0, Math.round(gap))}px`;
+}
+
+window.addEventListener('resize', alignSidebarNav);
+window.addEventListener('load', alignSidebarNav);
+document.fonts?.ready.then(alignSidebarNav);
+
+// A sidebar section opens and closes from anywhere on its heading row (the
+// count, "+" and switches keep their own jobs)
+document.querySelectorAll('.sidebar-fold .sidebar__label').forEach(label => {
+    label.addEventListener('click', event => {
+        if (event.target.closest('button, a, input, label.switch')) return;
+        label.querySelector('.sidebar__toggle')?.click();
+    });
 });
