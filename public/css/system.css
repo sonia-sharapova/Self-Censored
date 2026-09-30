@@ -8441,3 +8441,153 @@ body.dark .topic-card[aria-pressed="true"] {
 .logo-box.logo-box--wide {
     padding: 0 5px;
 }
+
+/* Tablets and phones: no sidebar. The tabs (Customize, Settings) and the
+   feed's own search / Filter cover what it did. */
+@media (max-width: 900px) {
+    .sidebar {
+        display: none;
+    }
+}
+
+/* Phones: every tab visible (they wrap), and the footer stays at the end of
+   the page rather than covering the bottom of a small screen */
+@media (max-width: 640px) {
+    .site-tabs,
+    .header__inner .site-tabs {
+        flex-wrap: wrap;
+        gap: var(--space-2) var(--space-5);
+        overflow: visible;
+    }
+
+    .site-tabs .nav-menu__tab {
+        font-size: var(--text-sm);
+        letter-spacing: 0.02em;
+    }
+
+    .site-footer {
+        position: static;
+    }
+
+    .header__inner .title-block {
+        margin-top: var(--space-5);
+    }
+
+    .settings-page .settings-head {
+        padding-bottom: var(--space-4);
+    }
+
+    .src-box__bar {
+        padding: var(--space-3);
+    }
+}
+
+/* ==============================================
+   Source tables on narrow screens: each row becomes a two-line entry
+     [✓]  logo  Outlet name                 ★  ›/🗑
+          Medium · ✓ Reliable
+   (country is left out; the header keeps the select box, "Outlet" and the count)
+   ============================================== */
+@media (max-width: 760px) {
+    .src-table__table,
+    .src-table__table thead,
+    .src-table__table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .src-table__table colgroup {
+        display: none;
+    }
+
+    .src-table__table tr {
+        display: grid;
+        grid-template-columns: 36px auto 1fr auto auto;
+        grid-template-areas:
+            "check outlet outlet pin act"
+            "check bias cred cred cred";
+        align-items: center;
+        column-gap: var(--space-3);
+        row-gap: 2px;
+        padding: 10px var(--space-3);
+        border-bottom: 1px solid var(--rule-soft);
+    }
+
+    .src-table__table thead tr {
+        grid-template-areas: "check outlet outlet pin act";
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .src-table__table th,
+    .src-table__table td,
+    .src-table__table th:first-child,
+    .src-table__table td:first-child,
+    .src-table__table th:last-child,
+    .src-table__table td:last-child {
+        height: auto;
+        padding: 0;
+        border: 0;
+        box-shadow: none !important;
+    }
+
+    .src-table__table tr > :nth-child(1) { grid-area: check; }
+    .src-table__table tr > :nth-child(2) { grid-area: outlet; min-width: 0; }
+    .src-table__table tr > :nth-child(3) { grid-area: bias; }
+    .src-table__table tr > :nth-child(4) { grid-area: cred; }
+    .src-table__table tr > :nth-child(5) { display: none; }
+    .src-table__table tr > :nth-child(6) { grid-area: pin; }
+    .src-table__table tr > :nth-child(7) { grid-area: act; text-align: right; }
+
+    .src-table__table thead tr > :nth-child(3),
+    .src-table__table thead tr > :nth-child(4),
+    .src-table__table thead tr > :nth-child(6) {
+        display: none;
+    }
+
+    .src-table__table thead th {
+        height: auto;
+    }
+
+    .src-table__table tbody tr.is-selected {
+        box-shadow: inset 0 0 0 1px var(--select-ring);
+    }
+
+    /* the "Show more" row and the empty message span the full width */
+    .src-table__table tr.src-table__more,
+    .src-table__table tr.src-table__empty {
+        display: block;
+        padding: 0;
+    }
+
+    .src-table__table tr.src-table__more td,
+    .src-table__table tr.src-table__empty td {
+        display: block;
+        height: 52px;
+        padding: 0 var(--space-3);
+    }
+
+    .src-table__table .src-table__name {
+        font-size: var(--text-md);
+    }
+
+    .src-table__table .bias-tag,
+    .src-table__table .cred-status--text {
+        font-size: var(--text-xs);
+    }
+
+    .row-trash {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 760px) {
+    .src-table__table th,
+    .src-table__table td {
+        width: auto !important;
+    }
+
+    .src-table__table tr > :nth-child(6) {
+        text-align: center;
+    }
+}

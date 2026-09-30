@@ -1311,6 +1311,7 @@ function filteredSources(scope = 'picker') {
 // with a pager underneath; short pages are padded so the table keeps its height.
 
 const PAGE_SIZE_ROWS = 8;
+const SHOW_SEE_ALL = false;   // the "See all" popup under long tables
 const PAGE_SIZE_CARDS = 8;
 const tablePages = { feed: 1, available: 1, selection: 1 };   // how many lots of rows are showing ("Show more" adds one)
 const tableSorts = { feed: null, available: { key: 'name', dir: 1 }, selection: { key: 'name', dir: 1 } };
@@ -1597,7 +1598,8 @@ function createSourceTable(sources, scope, { all: showAll = false } = {}) {
         });
         cell.appendChild(more);
         moreRow.addEventListener('click', () => more.click());
-        if (scope !== 'selection') {
+        // "See all" (every row in a popup) is switched off for now
+        if (SHOW_SEE_ALL && scope !== 'selection') {
             const seeAll = document.createElement('button');
             seeAll.type = 'button';
             seeAll.className = 'link-btn src-table__see-all';
