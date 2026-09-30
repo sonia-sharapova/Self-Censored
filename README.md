@@ -64,7 +64,7 @@ browser (public/)  ──►  /api/news?sources=bbc,npr,…  ──►  server/ 
 The feed shows the newest articles first, 15 per page, with First / Previous / page numbers / Next / Last.
 
 ## Defaults
-A new visitor, and "Reset to default", get World, Politics and Technology; `*AI`, `trump`, `"ICE"` and `guilty` redacted; and twelve sources: Cybernews, WSJ, Washington Post, The Globe and Mail, ProPublica, PBS, NPR, Nature, New York Times, CNN, BBC and AP, with PBS, Nature, NYT, CNN and BBC starred.
+A new visitor, and "Reset to default", get World, Politics and Technology; `*AI`, `trump`, `"ICE"` and `guilty` redacted; and eight sources: WSJ, PBS, NPR, Nature, New York Times, CNN, BBC and AP, with PBS and NYT starred.
 
 ## Filtering
 Filtering happens in the browser, on articles already loaded, so every change is instant.

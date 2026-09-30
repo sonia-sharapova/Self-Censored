@@ -11,7 +11,7 @@
 // The five most-visited outlets in the catalog that are rated credible and have a
 // working free feed (Fox News is rated Low; the Washington Post feed is down)
 // The default feed, and the ones starred to the sidebar
-const DEFAULT_SOURCES = ['cybernews', 'wsj', 'wapo', 'globeandmail', 'propublica', 'pbs', 'npr', 'nature', 'nyt', 'cnn', 'bbc', 'ap'];
+const DEFAULT_SOURCES = ['wsj', 'pbs', 'npr', 'nature', 'nyt', 'cnn', 'bbc', 'ap'];
 const DEFAULT_FAVORITES = ['pbs', 'nyt'];
 // One of each kind of keyword: a wildcard at either end, a plain word, an exact match
 // The default redactions, which double as examples: a wildcard (*ai: AI,
