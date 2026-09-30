@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Averia+Libre:wght@700&family=IBM+Plex+Mono:wght@400;600&display=swap">
-    <link rel="stylesheet" href="css/system.css?v=202609292146">
-    <link rel="stylesheet" href="css/news.css?v=202609292146">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+    <link rel="stylesheet" href="css/system.css?v=202609292249">
+    <link rel="stylesheet" href="css/news.css?v=202609292249">
+    <link rel="icon" type="image/svg+xml" href="/assets/newspaper.svg">
 </head>
 <body>
 
@@ -137,13 +137,13 @@
                     <div class="nav-menu">
                         <button class="nav-menu__tab" type="button" aria-haspopup="menu" aria-expanded="false" onclick="toggleNavMenu(event, 'about')">About <span class="nav-menu__chev" aria-hidden="true">⌄</span></button>
                         <div class="nav-menu__panel" id="navMenu-about" role="menu" hidden>
-                            <p class="nav-menu__soon">Coming soon.</p>
+                            <p class="nav-menu__soon">N/A</p>
                         </div>
                     </div>
                     <div class="nav-menu">
                         <button class="nav-menu__tab" type="button" aria-haspopup="menu" aria-expanded="false" onclick="toggleNavMenu(event, 'contact')">Contact <span class="nav-menu__chev" aria-hidden="true">⌄</span></button>
                         <div class="nav-menu__panel" id="navMenu-contact" role="menu" hidden>
-                            <p class="nav-menu__soon">Coming soon.</p>
+                            <p class="nav-menu__soon">N/A</p>
                         </div>
                     </div>
                     <a class="nav-menu__tab site-tabs__link" href="#settings" onclick="event.preventDefault(); openSettings()">Settings</a>
@@ -352,6 +352,14 @@
                 </button>
                 <div class="filter-pop__panel" id="sourceFilters" hidden></div>
             </div>
+                                            <div class="view-toggle" role="group" aria-label="View">
+                                                <button type="button" data-view="grid" aria-label="Grid view" title="Grid" onclick="setSourceView('grid')">
+                                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+                                                </button>
+                                                <button type="button" data-view="rows" aria-label="Rows view" title="Rows" onclick="setSourceView('rows')">
+                                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                                                </button>
+                                            </div>
                                         </div>
                                             <div id="settingsSources"></div>
                                             <div class="src-box__foot library__foot">
@@ -530,7 +538,7 @@
         </main>
 
         <footer class="site-footer">
-            <span>Self-Censored: if you can't see it, it's not real. (ง•̀o•́)ง</span>
+            <span>If you can't see it, it's not real. (ง•̀o•́)ง</span>
         </footer>
     </div>
 </div>
@@ -570,6 +578,6 @@
     </div>
 </div>
 
-<script src="script.js?v=202609292146"></script>
+<script src="script.js?v=202609292249"></script>
 </body>
 </html>

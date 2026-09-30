@@ -109,7 +109,7 @@ function lookUpCached(articleUrl) {
 
 // Fill in missing images for these articles, waiting
 // at most `budgetMs`; lookups still running carry on for next time
-export async function addMissingImages(articles, budgetMs = 2500) {
+export async function addMissingImages(articles, budgetMs = 1200) {
     // Look up the page the picture is on (for Reddit, the linked story)
     const pageOf = article => article.imageFrom || article.url;
     const missing = articles.filter(article => !article.urlToImage && pageOf(article) && !isGoogleNews(pageOf(article)));

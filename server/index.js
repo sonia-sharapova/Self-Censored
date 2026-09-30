@@ -17,7 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || '127.0.0.1';
 const CACHE_TTL_MS = 10 * 60 * 1000;
-const REQUEST_WAIT_MS = 8000;
+const REQUEST_WAIT_MS = 4000;   // a slow outlet is left out of this response, not waited on
 
 const SOURCES = JSON.parse(readFileSync(path.join(__dirname, 'sources.json'), 'utf8'));
 const SOURCES_BY_ID = Object.fromEntries(SOURCES.map(s => [s.id, s]));
@@ -35,10 +35,12 @@ const LOGOS_DIR = path.join(ASSETS_DIR, 'logo');    // wide wordmarks, named <so
 
 const cache = new Map();
 
+// Stale-while-revalidate: once an outlet has loaded, its last articles are
+// served straight away and a refresh runs in the background when they're old
 async function cached(key, ttl, load) {
     const entry = cache.get(key) || {};
     if (entry.value && entry.expires > Date.now()) return entry.value;
-    if (entry.pending) return entry.pending;
+    if (entry.pending) return entry.value || entry.pending;
 
     entry.pending = load()
         .then(value => {
@@ -53,7 +55,13 @@ async function cached(key, ttl, load) {
             return entry.value || null;
         });
     cache.set(key, entry);
-    return entry.pending;
+    return entry.value || entry.pending;
+}
+
+// Keep every outlet's articles ready: load them all at start-up, and again
+// before they go stale, so a visitor rarely waits on an upstream feed
+function warmCache() {
+    SOURCES.filter(isAvailable).forEach(source => fetchSource(source).catch(() => {}));
 }
 
 async function fetchSource(source) {
@@ -156,10 +164,12 @@ app.get('/api/news', async (req, res) => {
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 // Outlet images live beside public/: assets/icon and assets/logo, each file named <source id>.<ext>
-app.use('/assets', express.static(ASSETS_DIR, { maxAge: '7d' }));
+app.use('/assets', express.static(ASSETS_DIR, { maxAge: '1h' }));   // short, so swapped image files show up soon
 
 app.listen(PORT, HOST, () => {
     console.log(`Self-Censored listening on http://${HOST}:${PORT}`);
+    warmCache();
+    setInterval(warmCache, CACHE_TTL_MS - 60 * 1000).unref();
     if (!process.env.GUARDIAN_API_KEY) {
         console.log('GUARDIAN_API_KEY not set: The Guardian will be listed as limited');
     }

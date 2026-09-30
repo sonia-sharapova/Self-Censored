@@ -12,7 +12,7 @@
 // working free feed (Fox News is rated Low; the Washington Post feed is down)
 // The default feed, and the ones starred to the sidebar
 const DEFAULT_SOURCES = ['cybernews', 'wsj', 'wapo', 'globeandmail', 'propublica', 'pbs', 'npr', 'nature', 'nyt', 'cnn', 'bbc', 'ap'];
-const DEFAULT_FAVORITES = ['pbs', 'nature', 'nyt', 'cnn', 'bbc'];
+const DEFAULT_FAVORITES = ['pbs', 'nyt'];
 // One of each kind of keyword: a wildcard at either end, a plain word, an exact match
 // The default redactions, which double as examples: a wildcard (*ai: AI,
 // OpenAI…), plain words (any case) and an exact match ("ICE", not "ice")
@@ -238,10 +238,16 @@ function createLogo(source, fallbackName, prefer = 'logo', { only = false, keepW
         trimLogo(url).then(({ src, ratio }) => {
             if (logo.firstChild !== image) return;
             const fit = parseFloat(getComputedStyle(logo).getPropertyValue('--logo-fit')) || 6;
-            if (!keepWide && ratio > fit && index + 1 < candidates.length) {
+            // A too-wide wordmark gives way to the icon; an icon is always kept (shrunk to fit)
+            if (!keepWide && candidates[index][0] === 'logo' && ratio > fit && index + 1 < candidates.length) {
                 show(index + 1);
-            } else if (src !== url) {
-                image.src = src;
+            } else {
+                if (src !== url) image.src = src;
+                // Icons are sized by area, not height: a wide mark gets shorter and
+                // a square one fills the space, so they all look about the same size
+                // An outlet without an icon shows its wordmark: let it run wider
+                if (prefer === 'icon' && candidates[index][0] === 'logo') showWordmark(logo, image, ratio);
+                else if (prefer === 'icon') balanceIcon(logo, image, ratio);
             }
         });
     };
@@ -255,6 +261,40 @@ function createLogo(source, fallbackName, prefer = 'logo', { only = false, keepW
 // canvas; our own /assets are same-origin). Resolves to { src, ratio }: the
 // cropped image as a data URL (or the original) and its width/height ratio.
 const trimmedLogos = new Map();
+
+// A wordmark standing in for an icon (e.g. The Washington Post): a short strip,
+// up to three slots wide; boxes around it (.logo-box) widen to fit
+function showWordmark(logo, image, ratio) {
+    if (!ratio || !isFinite(ratio)) return;
+    const size = parseFloat(getComputedStyle(logo).getPropertyValue('--logo-size')) || 28;
+    const maxWidth = size * 2;   // wide enough to read, leaving room for the name
+    const width = Math.min(maxWidth, size * 0.7 * ratio);
+    image.style.width = `${width.toFixed(1)}px`;
+    image.style.height = `${(width / ratio).toFixed(1)}px`;
+    image.style.maxWidth = 'none';
+    logo.style.maxWidth = 'none';
+    logo.classList.add('logo--wordmark');
+    logo.closest('.logo-box')?.classList.add('logo-box--wide');
+}
+
+// Size a (trimmed) icon so its area matches a square of the slot's height:
+// width × height = size², capped by the slot's width
+function balanceIcon(logo, image, ratio) {
+    if (!ratio || !isFinite(ratio)) return;
+    const size = parseFloat(getComputedStyle(logo).getPropertyValue('--logo-size')) || 28;
+    const fit = parseFloat(getComputedStyle(logo).getPropertyValue('--logo-fit')) || 6;
+    let height = ratio >= 1 ? size / Math.sqrt(ratio) : size;          // tall marks keep full height
+    let width = height * ratio;
+    const maxWidth = size * fit;
+    if (width > maxWidth) {
+        width = maxWidth;
+        height = width / ratio;
+    }
+    image.style.width = `${width.toFixed(1)}px`;
+    image.style.height = `${height.toFixed(1)}px`;
+    image.style.maxWidth = 'none';
+    logo.classList.add('logo--balanced');
+}
 
 function trimLogo(url) {
     if (!trimmedLogos.has(url)) {
@@ -596,10 +636,22 @@ function toggleSidebarSection(key) {
     autoFolded.delete(key);
     if (open) {
         sidebarFolded.delete(key);
-        userOpened.add(key);        // you opened it: it won't fold itself again
+        lastOpened = key;           // the section in use: never folded to make room
+        // Opening it would overflow: close the other sections at the same moment
+        // (they swap in one motion); if everything fits, the others stay open
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar && getComputedStyle(sidebar).position === 'sticky') {
+            let overflow = sidebar.scrollHeight - sidebar.clientHeight + foldHeight(key);
+            for (const other of AUTO_FOLD_ORDER) {
+                if (overflow <= 0) break;
+                if (other === key || sidebarFolded.has(other) || autoFolded.has(other)) continue;
+                overflow -= foldHeight(other);
+                autoFolded.add(other);
+            }
+        }
     } else {
         sidebarFolded.add(key);
-        userOpened.delete(key);
+        if (lastOpened === key) lastOpened = null;
     }
     saveToLocalStorage('sidebarFolded', [...sidebarFolded]);
     applySidebarFolds();
@@ -1035,7 +1087,8 @@ function renderSidebarSources() {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'row-item__name';
-        button.innerHTML = `<span>See all</span><span class="row-item__count">${inFeed.length}</span>`;
+        // Lines up with the icons above (after the ★ column)
+        button.innerHTML = '<span class="row-item__source"><span class="row-item__pin"></span><span class="row-item__label">See all</span></span>';
         button.addEventListener('click', () => {
             openSettings('sources');
             if (pickerOpen) closeSourcePicker();
@@ -1052,8 +1105,8 @@ function renderSidebarSources() {
 // description goes; scrolling is the last resort.
 // With room to spare, sections folded this way open again.
 const autoFolded = new Set();
-const userOpened = new Set();
-const AUTO_FOLD_ORDER = ['avoid', 'topics'];
+let lastOpened = null;                                   // the section you opened most recently
+const AUTO_FOLD_ORDER = ['avoid', 'topics', 'sources'];  // folded in this order when out of room
 
 function foldHeight(key) {
     const inner = document.getElementById(`${key}Fold`)?.firstElementChild;
@@ -1072,15 +1125,15 @@ function fitSidebarFavorites() {
     const about = sidebar.querySelector('.sidebar__about');
     if (about) about.hidden = false;
 
-    // Fold or unfold sections by how much room there is (heights are measured
-    // directly, so the easing animation doesn't get in the way)
+    // Out of room: fold open sections you're not using (never the one you just
+    // opened) until everything fits. With room again, reopen what was folded.
     let overflow = sidebar.scrollHeight - sidebar.clientHeight;
     if (overflow > 0) {
         for (const key of AUTO_FOLD_ORDER) {
             if (overflow <= 0) break;
-            if (sidebarFolded.has(key) || autoFolded.has(key) || userOpened.has(key)) continue;
-            autoFolded.add(key);
+            if (key === lastOpened || sidebarFolded.has(key) || autoFolded.has(key)) continue;
             overflow -= foldHeight(key);
+            autoFolded.add(key);
         }
     } else {
         for (const key of [...AUTO_FOLD_ORDER].reverse()) {
@@ -1093,9 +1146,11 @@ function fitSidebarFavorites() {
     applySidebarFolds();
     if (overflow <= 0) return;
 
-    // Still too tall: the description goes, then the sidebar scrolls (sources
-    // always show their five)
+    // Still too tall (the open section alone doesn't fit): drop source rows
+    // from the end ("See all" stays), then the description, and only then scroll
     const settle = () => sidebar.scrollHeight - sidebar.clientHeight - foldPending();
+    const rows = items.filter(item => !item.classList.contains('row-item--see-all'));
+    for (let i = rows.length - 1; i > 0 && settle() > 0; i--) rows[i].hidden = true;
     if (about && settle() > 0) about.hidden = true;
     if (settle() > 0) sidebar.classList.add('sidebar--scroll');
 }
@@ -1750,13 +1805,13 @@ function createTablePager(scope, total, pageCount, size) {
 // Grid: 4 across, 8 to a page. Each card: the icon and name (with country),
 // ★ in the top-right corner, topic and bias tags, credibility and bias lines,
 // and a trash can on hover. Clicking the card opens the outlet's page.
-function createSourceGrid(sources) {
+function createSourceGrid(sources, scope = 'feed') {
     const wrap = document.createElement('div');
     wrap.className = 'src-grid-wrap';
     const page = sources;   // the grid shows every card, one continuous grid
     const grid = document.createElement('div');
     grid.className = 'src-grid';
-    page.forEach(source => grid.appendChild(createSourceCard(source)));
+    page.forEach(source => grid.appendChild(createSourceCard(source, scope)));
     wrap.append(grid);
     const outer = document.createElement('div');
     outer.className = 'src-table-outer';
@@ -1764,15 +1819,40 @@ function createSourceGrid(sources) {
     return outer;
 }
 
-function createSourceCard(source) {
+// Your sources: clicking a card opens its page (trash on hover removes it).
+// Add more: clicking a card ticks it to add (› opens its page).
+function createSourceCard(source, scope = 'feed') {
+    const picking = scope !== 'feed';
     const card = document.createElement('article');
     card.className = isPinned(source) ? 'src-card src-card--pinned' : 'src-card';
     card.tabIndex = 0;
-    card.title = `Details for ${source.name}`;
-    card.addEventListener('click', () => openSourceDetail(source.id));
-    card.addEventListener('keydown', event => {
-        if (event.key === 'Enter' && event.target === card) openSourceDetail(source.id);
-    });
+    if (picking) {
+        const ticked = isPickerTicked(source);
+        const usable = source.available || selectedSources.includes(source.id);
+        if (ticked) card.classList.add('is-picked');
+        if (!usable) card.classList.add('is-disabled');
+        card.setAttribute('role', 'checkbox');
+        card.setAttribute('aria-checked', String(ticked));
+        card.title = usable ? `${ticked ? 'Untick' : 'Tick'} ${source.name}` : `${source.name}: no free feed`;
+        const toggle = () => {
+            if (!usable) return;
+            setPickerTicked(source, !ticked);
+            renderSourcePicker();
+        };
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', event => {
+            if ((event.key === 'Enter' || event.key === ' ') && event.target === card) {
+                event.preventDefault();
+                toggle();
+            }
+        });
+    } else {
+        card.title = `Details for ${source.name}`;
+        card.addEventListener('click', () => openSourceDetail(source.id));
+        card.addEventListener('keydown', event => {
+            if (event.key === 'Enter' && event.target === card) openSourceDetail(source.id);
+        });
+    }
 
     const head = document.createElement('div');
     head.className = 'src-card__head';
@@ -1804,9 +1884,16 @@ function createSourceCard(source) {
     fact('Credibility', createCredibilityBadge(source));
     fact('Bias', createBiasTag(source));
 
-    const trash = createTrashButton(source);
-    trash.classList.add('src-card__trash');
-    card.append(head, tags, facts, trash);
+    const corner = picking ? createDetailsButton(source) : createTrashButton(source);
+    corner.classList.add('src-card__trash');
+    card.append(head, tags, facts, corner);
+    if (picking) {
+        const tick = document.createElement('span');
+        tick.className = 'src-card__tick';
+        tick.setAttribute('aria-hidden', 'true');
+        tick.textContent = '✓';
+        card.appendChild(tick);
+    }
     return card;
 }
 
@@ -1911,7 +1998,9 @@ function renderSourcePicker() {
     const note = document.getElementById('libraryAllPresent');
     if (note) note.hidden = !allPresent;
     if (allPresent) available.replaceChildren();
-    else available.replaceChildren(createSourceTable(lists.available, 'available'));
+    else available.replaceChildren(sourceView === 'grid'
+        ? createSourceGrid(lists.available, 'available')
+        : createSourceTable(lists.available, 'available'));
     // Footer, left: how many are ticked, and "Undo selection"
     const summary = document.getElementById('pickerSummary');
     if (summary && !summary.childElementCount) {
@@ -2136,6 +2225,7 @@ function setSourceView(view) {
     saveToLocalStorage('sourceView', sourceView);
     tablePages.feed = 1;
     renderFeedSources();
+    if (pickerOpen) renderSourcePicker();
 }
 
 function createStar(source) {

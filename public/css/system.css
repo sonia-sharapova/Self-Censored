@@ -8302,3 +8302,142 @@ body.dark .topic-card[aria-pressed="true"] {
         flex-basis: 100%;
     }
 }
+
+/* Add more, grid view: a ticked card gets a blue frame and a ✓ */
+.src-card__tick {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: none;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--action);
+    color: #fff;
+    font-size: 11px;
+}
+
+.src-box .src-card.is-picked {
+    border-color: var(--action);
+    background: rgba(47, 111, 237, 0.06);
+    box-shadow: 0 0 0 1px var(--action), 0 2px 10px rgba(47, 111, 237, 0.12);
+}
+
+.src-card.is-picked .src-card__tick {
+    display: grid;
+}
+
+.src-card.is-disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Picker toolbar: the view toggle sits at the end like on Your sources */
+#sourcePicker .src-box__bar .view-toggle {
+    flex: none;
+}
+
+/* NEWSROOM: 20px of padding above (and below) its label */
+.sidebar-nav__item {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Sidebar items follow the site's 2px corners (--radius-btn / --radius-chip) */
+.sidebar-nav__item,
+.row-item,
+.row-list__add,
+.sidebar__plus,
+.tag-list__item,
+.sidebar-fold .sidebar__label,
+.sidebar-metric .sidebar__label,
+.sidebar__toggle,
+.row-item__trash,
+.sidebar-metric__toggle {
+    border-radius: var(--radius-btn);
+}
+
+/* and so do the other rounded pieces */
+.src-card,
+.logo-box,
+.topic-card,
+.theme-card,
+.theme-sync,
+.contact-card,
+.panel-box,
+.kw-tag-item,
+.library-note,
+.add-slot,
+.nav-menu__panel,
+.switch__track {
+    border-radius: var(--radius-btn);
+}
+
+/* "See all": a light border, its words starting where the icons do */
+.row-item--see-all {
+    border: 1px solid var(--rule-soft);
+}
+
+.row-item--see-all:hover {
+    border-color: var(--rule);
+}
+
+/* Tab menus stay inside the tabs' span: menus near the right edge open leftward */
+.site-tabs .nav-menu:nth-last-of-type(-n + 2) .nav-menu__panel {
+    right: 0;
+    left: auto;
+}
+
+.site-tabs .nav-menu__panel {
+    min-width: max(100%, 140px);
+}
+
+
+/* rows the sidebar drops to fit really disappear */
+.row-item[hidden] {
+    display: none;
+}
+
+/* More room under the tagline: s*lf sits a little higher, and NEWSROOM stays
+   level with the page title (alignSidebarNav) */
+.sidebar {
+    padding-top: 4px;
+}
+
+/* A balanced icon: centred in its slot at its own width and height */
+.logo--balanced {
+    align-items: center;
+    justify-content: center;
+}
+
+.logo--balanced img {
+    object-fit: contain;
+}
+
+.row-item__source .logo--balanced {
+    width: 24px;
+    max-width: 24px;
+}
+
+/* A wordmark in an icon's place: its box grows sideways */
+.logo-box.logo-box--wide {
+    width: auto;
+    min-width: 42px;
+    padding: 0 8px;
+}
+
+.logo--wordmark {
+    width: auto;
+    align-items: center;
+}
+
+/* In the sidebar the names stay lined up, so the wordmark takes a wider slot */
+.row-item__source .logo--wordmark {
+    width: 48px;
+    max-width: 48px;
+}
+
+.logo-box.logo-box--wide {
+    padding: 0 5px;
+}
