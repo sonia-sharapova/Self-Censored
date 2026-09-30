@@ -2895,7 +2895,7 @@ function createNewsCard(article) {
         const lock = document.createElement('span');
         lock.className = 'card__lock';
         lock.textContent = '🔒';
-        lock.title = `${cardSource.name} is paywalled. Tick it under Settings → Advanced settings if you subscribe.`;
+        lock.title = `${cardSource.name} is paywalled. Tick it under Settings → Feed if you subscribe.`;
         date.before(lock);
     }
 
@@ -3201,7 +3201,7 @@ const SETTINGS_SECTIONS = {
 };
 const SETTINGS_SUBNAV = {
     appearance: [['settingsAppearanceSection', 'Theme']],
-    preferences: [['settingsTopicsSection', 'Topics'], ['settingsSourcesSection', 'Sources'], ['settingsKeywordsSection', 'Redacted keywords'], ['settingsSpectrumSection', 'The Spectrum']],
+    preferences: [['settingsTopicsSection', 'Topics'], ['settingsSourcesSection', 'Sources'], ['settingsKeywordsSection', 'Keywords'], ['settingsSpectrumSection', 'Spectrum']],
     advanced: [['settingsAdvancedSection', 'Feed'], ['settingsDataSection', 'Your data'], ['settingsDefaultsSection', 'Defaults']],
     contact: [['settingsContactSection', 'Contact']]
 };
@@ -3303,7 +3303,9 @@ function showSettingsGroup(group) {
         }));
     }
     if (GROUP_PANES[group]) showPrefPane(GROUP_PANES[group]);
-    scrollToSettingsTop();
+    // Stay put: only scroll if the content's top has gone off the screen
+    const top = document.querySelector('.settings-layout')?.getBoundingClientRect().top ?? 0;
+    if (top < 0) scrollToSettingsTop();
     updateSettingsSubnav();
 }
 

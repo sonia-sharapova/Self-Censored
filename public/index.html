@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Averia+Libre:wght@700&family=IBM+Plex+Mono:wght@400;600&display=swap">
-    <link rel="stylesheet" href="css/system.css?v=202609292259">
-    <link rel="stylesheet" href="css/news.css?v=202609292259">
+    <link rel="stylesheet" href="css/system.css?v=202609300046">
+    <link rel="stylesheet" href="css/news.css?v=202609300046">
     <link rel="icon" type="image/svg+xml" href="/assets/newspaper.svg">
 </head>
 <body>
@@ -146,7 +146,7 @@
                             <p class="nav-menu__soon">N/A</p>
                         </div>
                     </div>
-                    <a class="nav-menu__tab site-tabs__link" href="#settings" onclick="event.preventDefault(); openSettings()">Settings</a>
+                    <a class="nav-menu__tab site-tabs__link" href="#settings" onclick="event.preventDefault(); openSettings()"><svg class="site-tabs__gear" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</a>
                 </nav>
             </div>
         </header>
@@ -215,7 +215,7 @@
                     <!-- Tabs across the top; each tab has its own section nav on the left -->
                     <nav class="settings-tabs" aria-label="Settings">
                         <button class="settings-tabs__tab" type="button" data-group="preferences" onclick="showSettingsGroup('preferences')">Configure</button>
-                        <button class="settings-tabs__tab" type="button" data-group="advanced" onclick="showSettingsGroup('advanced')">Advanced settings</button>
+                        <button class="settings-tabs__tab" type="button" data-group="advanced" onclick="showSettingsGroup('advanced')">Settings</button>
                         <button class="settings-tabs__tab" type="button" data-group="appearance" onclick="showSettingsGroup('appearance')">Theme</button>
                         <button class="settings-tabs__tab" type="button" data-group="contact" onclick="showSettingsGroup('contact')">Contact</button>
                     </nav>
@@ -378,7 +378,7 @@
                                 </section>
 
                                 <section class="panel-section" id="settingsKeywordsSection">
-                                    <h2 class="panel-title">Redacted keywords</h2>
+                                    <h2 class="panel-title">Keywords</h2>
                                     <ul class="section-hint kw-help">
                                         <li><code>*</code> extends a word to any ending or beginning: <code>*AI</code> hides both “AI” and “OpenAI”; <code>kill*</code> hides kill, killed and killings.</li>
                                         <li><code>"quotes"</code> match exactly, capitals included: <code>"Trump"</code> hides Trump but not a trump card.</li>
@@ -401,7 +401,7 @@
                                 </section>
 
                                 <section class="panel-section spectrum-head" id="settingsSpectrumSection">
-                                    <h2 class="panel-title">The Spectrum</h2>
+                                    <h2 class="panel-title">Spectrum</h2>
                                 </section>
 
                                 <section class="panel-section panel-section--sub" id="settingsBiasSection">
@@ -569,7 +569,7 @@
     <div class="consent__panel" role="status" aria-labelledby="consentTitle">
         <div class="consent__text">
             <strong class="consent__title" id="consentTitle">Your settings are saved in this browser</strong>
-            <p>No account and no cookies: your keywords, sources and preferences stay on this device, in local browser data, and are never sent anywhere. You can switch this off, or export your setup as a file, in <a href="#settings/data" onclick="consentGoTo(event)">Settings → Advanced settings → Your data</a>.</p>
+            <p>No account and no cookies: your keywords, sources and preferences stay on this device, in local browser data, and are never sent anywhere. You can switch this off, or export your setup as a file, in <a href="#settings/data" onclick="consentGoTo(event)">Settings → Your data</a>.</p>
         </div>
         <div class="consent__actions">
             <button class="btn" type="button" onclick="setStorageConsent(false, true)">Don't save</button>
@@ -578,6 +578,6 @@
     </div>
 </div>
 
-<script src="script.js?v=202609292259"></script>
+<script src="script.js?v=202609300046"></script>
 </body>
 </html>
